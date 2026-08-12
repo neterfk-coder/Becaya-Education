@@ -7,7 +7,7 @@
 
      node scripts/construir-datos.mjs
 
-   Generado el 2026-08-12T20:49:56.066Z.
+   Generado el 2026-08-12T21:29:36.276Z.
    ============================================================ */
 
 const BECAS = [
@@ -37,9 +37,9 @@ const BECAS = [
       "Materiales"
     ],
     "enlace": "https://www.pronabec.gob.pe/beca-18/",
-    "imagen": "https://www.gob.pe/assets/escudo-rojo-200-f4bf73f7.png",
-    "imagenCredito": "Imagen: Plataforma del Estado Peruano (gob.pe)",
-    "fuente": "Pronabec"
+    "imagen": null,
+    "imagenCredito": null,
+    "fuente": "Carga manual"
   },
   {
     "id": "suiza-excelencia-2026",
@@ -100,9 +100,9 @@ const BECAS = [
       "Materiales de estudio"
     ],
     "enlace": "https://www.pronabec.gob.pe/",
-    "imagen": "https://www.gob.pe/assets/escudo-rojo-200-f4bf73f7.png",
-    "imagenCredito": "Imagen: Plataforma del Estado Peruano (gob.pe)",
-    "fuente": "Pronabec"
+    "imagen": null,
+    "imagenCredito": null,
+    "fuente": "Carga manual"
   },
   {
     "id": "fulbright-maestria-2027",
@@ -169,9 +169,9 @@ const BECAS = [
       "Gastos de instalación"
     ],
     "enlace": "https://www.pronabec.gob.pe/",
-    "imagen": "https://www.gob.pe/assets/escudo-rojo-200-f4bf73f7.png",
-    "imagenCredito": "Imagen: Plataforma del Estado Peruano (gob.pe)",
-    "fuente": "Pronabec"
+    "imagen": null,
+    "imagenCredito": null,
+    "fuente": "Carga manual"
   },
   {
     "id": "santander-estudios-2026",
@@ -229,9 +229,9 @@ const BECAS = [
       "Movilidad local"
     ],
     "enlace": "https://www.pronabec.gob.pe/beca-18/",
-    "imagen": "https://www.gob.pe/assets/escudo-rojo-200-f4bf73f7.png",
-    "imagenCredito": "Imagen: Plataforma del Estado Peruano (gob.pe)",
-    "fuente": "Pronabec"
+    "imagen": null,
+    "imagenCredito": null,
+    "fuente": "Carga manual"
   },
   {
     "id": "daad-epos-2027",
@@ -293,9 +293,9 @@ const BECAS = [
       "Acompañamiento académico"
     ],
     "enlace": "https://www.pronabec.gob.pe/",
-    "imagen": "https://www.gob.pe/assets/escudo-rojo-200-f4bf73f7.png",
-    "imagenCredito": "Imagen: Plataforma del Estado Peruano (gob.pe)",
-    "fuente": "Pronabec"
+    "imagen": null,
+    "imagenCredito": null,
+    "fuente": "Carga manual"
   },
   {
     "id": "chevening-2027",
@@ -354,9 +354,9 @@ const BECAS = [
       "Subvención de conectividad"
     ],
     "enlace": "https://www.pronabec.gob.pe/",
-    "imagen": "https://www.gob.pe/assets/escudo-rojo-200-f4bf73f7.png",
-    "imagenCredito": "Imagen: Plataforma del Estado Peruano (gob.pe)",
-    "fuente": "Pronabec"
+    "imagen": null,
+    "imagenCredito": null,
+    "fuente": "Carga manual"
   },
   {
     "id": "erasmus-mundus-2027",
@@ -415,9 +415,9 @@ const BECAS = [
       "Materiales de estudio"
     ],
     "enlace": "https://www.pronabec.gob.pe/",
-    "imagen": "https://www.gob.pe/assets/escudo-rojo-200-f4bf73f7.png",
-    "imagenCredito": "Imagen: Plataforma del Estado Peruano (gob.pe)",
-    "fuente": "Pronabec"
+    "imagen": null,
+    "imagenCredito": null,
+    "fuente": "Carga manual"
   },
   {
     "id": "talento-militar-2027",
@@ -448,9 +448,9 @@ const BECAS = [
       "Materiales"
     ],
     "enlace": "https://www.pronabec.gob.pe/",
-    "imagen": "https://www.gob.pe/assets/escudo-rojo-200-f4bf73f7.png",
-    "imagenCredito": "Imagen: Plataforma del Estado Peruano (gob.pe)",
-    "fuente": "Pronabec"
+    "imagen": null,
+    "imagenCredito": null,
+    "fuente": "Carga manual"
   },
   {
     "id": "oea-alianzas-2027",
@@ -546,9 +546,9 @@ const BECAS = [
       "Instalación"
     ],
     "enlace": "https://www.pronabec.gob.pe/",
-    "imagen": "https://www.gob.pe/assets/escudo-rojo-200-f4bf73f7.png",
-    "imagenCredito": "Imagen: Plataforma del Estado Peruano (gob.pe)",
-    "fuente": "Pronabec"
+    "imagen": null,
+    "imagenCredito": null,
+    "fuente": "Carga manual"
   },
   {
     "id": "eiffel-2027",
@@ -611,9 +611,9 @@ const BECAS = [
       "Movilidad"
     ],
     "enlace": "https://www.pronabec.gob.pe/",
-    "imagen": "https://www.gob.pe/assets/escudo-rojo-200-f4bf73f7.png",
-    "imagenCredito": "Imagen: Plataforma del Estado Peruano (gob.pe)",
-    "fuente": "Pronabec"
+    "imagen": null,
+    "imagenCredito": null,
+    "fuente": "Carga manual"
   },
   {
     "id": "carolina-2027",

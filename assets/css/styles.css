@@ -102,6 +102,34 @@ button{font-family:inherit;}
 }
 
 /* ============================================================
+   AVISO DE DEMOSTRACIÓN
+   ------------------------------------------------------------
+   Franja superior, alto contraste y sin botón de cerrar: mientras
+   las fechas del catálogo sean inventadas, quien entre tiene que
+   enterarse sí o sí. Desaparece sola cuando los datos dejan de
+   estar marcados como de ejemplo.
+   ============================================================ */
+.aviso-demo{
+  background:var(--urgente);
+  color:#fff;
+  padding:11px 0;
+}
+.aviso-demo__fila{
+  display:flex;align-items:center;gap:12px;
+}
+.aviso-demo__marca{
+  flex-shrink:0;
+  width:22px;height:22px;border-radius:50%;
+  background:rgba(255,255,255,.22);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:bold;font-size:14px;line-height:1;
+}
+.aviso-demo__texto{
+  font-size:13.5px;line-height:1.5;
+}
+.aviso-demo__texto b{font-weight:bold;}
+
+/* ============================================================
    CABECERA
    ============================================================ */
 .cabecera{

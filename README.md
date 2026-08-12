@@ -62,10 +62,19 @@ porqué está en `docs/esquema-datos.md`.
 
 ## Los datos que trae son de ejemplo
 
-Las becas y los voluntariados incluidos son de organizaciones reales, pero **las fechas
-están puestas a mano** para que el calendario tenga contenido en todos sus grupos y puedas
-ver cómo se comporta la interfaz. Antes de publicar hay que reemplazarlas por fechas
-verificadas.
+Las instituciones y organizaciones son reales, y sus enlaces oficiales están verificados,
+pero **todas las fechas son inventadas**: se pusieron a mano para que el calendario tenga
+contenido en todos sus grupos y se pueda ver cómo se comporta la interfaz. Ninguna
+corresponde a una convocatoria real.
+
+Mientras `data/manual.json` siga marcado con `"ejemplo": true`, la web muestra una franja
+roja fija arriba advirtiéndolo, y en la portada dice "Fechas de ejemplo, sin verificar" en
+lugar de una fecha de actualización. Ese aviso desaparece solo al cargar datos verificados
+y poner `"ejemplo": false` — no hay que acordarse de quitarlo a mano.
+
+**El sync de Pronabec nunca se ha ejecutado**, así que hoy el 100% del catálogo es carga
+manual. Por eso ninguna beca lleva `"fuente": "Pronabec"`: ese valor queda reservado para
+lo que de verdad venga de su API.
 
 Para las becas hay dos caminos, y lo razonable es usar los dos:
 

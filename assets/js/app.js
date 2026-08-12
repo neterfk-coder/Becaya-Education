@@ -93,18 +93,26 @@
     if (nodo) nodo.textContent = diaDeReferencia.getFullYear();
   }
 
-  /* La fecha de la portada es la de la última revisión de los datos,
-     no la de hoy. Poner "Datos al <hoy>" sobre un catálogo de hace
-     meses es exactamente la mentira que este proyecto quiere evitar. */
+  /* Mientras los datos sean de ejemplo NO se muestra ninguna fecha de
+     actualización: decir "Datos al 12 de agosto" sobre fechas inventadas
+     le daría a un dato falso el aire de haber sido verificado ese día,
+     que es justo el engaño que este proyecto dice querer evitar.
+     En su lugar se enciende el aviso de demostración de la cabecera. */
   function mostrarFechaDeDatos() {
     const nodo = $("#fechaHoy");
-    const revisado = typeof DATOS_ACTUALIZADOS !== "undefined" ? aFecha(DATOS_ACTUALIZADOS) : null;
-    nodo.textContent = revisado ? formatoFecha(revisado) : formatoFecha(diaDeReferencia);
+    const esEjemplo = typeof DATOS_DE_EJEMPLO !== "undefined" && DATOS_DE_EJEMPLO;
 
-    if (typeof DATOS_DE_EJEMPLO !== "undefined" && DATOS_DE_EJEMPLO) {
-      nodo.insertAdjacentHTML("afterend",
-        " · <b>Fechas de ejemplo</b>, verifica en la web oficial de cada institución");
+    if (esEjemplo) {
+      nodo.textContent = "Fechas de ejemplo, sin verificar";
+      const banda = $("#avisoDemo");
+      if (banda) banda.hidden = false;
+      return;
     }
+
+    const revisado = typeof DATOS_ACTUALIZADOS !== "undefined" ? aFecha(DATOS_ACTUALIZADOS) : null;
+    nodo.textContent = revisado
+      ? `Datos verificados al ${formatoFecha(revisado)}`
+      : "";
   }
 
   /* ============================================================

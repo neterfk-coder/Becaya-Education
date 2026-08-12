@@ -12,6 +12,22 @@
 
 <a class="salta-al-contenido" href="#resultados">Saltar a los resultados</a>
 
+<!-- Aviso de demostración. Va arriba de todo, fijo y en alto contraste,
+     porque las fechas que muestra el sitio no son las reales: si alguien
+     se guiara por ellas podría perder una postulación. Lo pinta app.js
+     solo cuando los datos siguen marcados como de ejemplo, así que
+     desaparece solo en cuanto se carguen datos verificados. -->
+<div class="aviso-demo" id="avisoDemo" role="alert" hidden>
+  <div class="contenedor aviso-demo__fila">
+    <span class="aviso-demo__marca" aria-hidden="true">!</span>
+    <p class="aviso-demo__texto">
+      <b>Sitio de demostración.</b> Las fechas de estas convocatorias son inventadas
+      y no corresponden a las reales. No las uses para postular: entra siempre a la
+      página oficial de cada institución.
+    </p>
+  </div>
+</div>
+
 <!-- ============ BARRA SUPERIOR ============ -->
 <header class="cabecera" id="cabecera">
   <div class="contenedor cabecera__fila">
@@ -75,7 +91,7 @@
       </div>
 
       <p class="portada__fecha revelar" style="--retraso:.24s">
-        Datos al <span id="fechaHoy"></span>
+        <span id="fechaHoy"></span>
       </p>
     </div>
 
@@ -245,13 +261,13 @@
   <section class="explicacion" id="como-funciona">
     <div class="contenedor">
       <p class="antetitulo">Cómo se arma este calendario</p>
-      <h2 class="explicacion__titulo">Tres fuentes, una sola fecha de verdad.</h2>
+      <h2 class="explicacion__titulo">Dos fechas, y el resto se calcula solo.</h2>
 
       <ol class="pasos">
         <li class="paso revelar">
           <span class="paso__num">01</span>
-          <h3>Se leen las fuentes oficiales</h3>
-          <p>La API de datos abiertos de Pronabec entrega las convocatorias vigentes del Estado peruano. Las becas internacionales se cargan y revisan a mano desde la web de cada institución.</p>
+          <h3>Hoy: carga manual, sin verificar</h3>
+          <p>Las convocatorias de esta versión están escritas a mano y <b>sus fechas no corresponden a las reales</b>. Están puestas para poder mostrar cómo se comporta el calendario. La integración con la API de datos abiertos de Pronabec está programada pero todavía no se ha ejecutado.</p>
         </li>
         <li class="paso revelar" style="--retraso:.08s">
           <span class="paso__num">02</span>

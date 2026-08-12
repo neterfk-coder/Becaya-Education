@@ -25,9 +25,9 @@
       "Materiales"
     ],
     "enlace": "https://www.pronabec.gob.pe/beca-18/",
-    "imagen": "https://www.gob.pe/assets/escudo-rojo-200-f4bf73f7.png",
-    "imagenCredito": "Imagen: Plataforma del Estado Peruano (gob.pe)",
-    "fuente": "Pronabec"
+    "imagen": null,
+    "imagenCredito": null,
+    "fuente": "Carga manual"
   },
   {
     "id": "suiza-excelencia-2026",
@@ -88,9 +88,9 @@
       "Materiales de estudio"
     ],
     "enlace": "https://www.pronabec.gob.pe/",
-    "imagen": "https://www.gob.pe/assets/escudo-rojo-200-f4bf73f7.png",
-    "imagenCredito": "Imagen: Plataforma del Estado Peruano (gob.pe)",
-    "fuente": "Pronabec"
+    "imagen": null,
+    "imagenCredito": null,
+    "fuente": "Carga manual"
   },
   {
     "id": "fulbright-maestria-2027",
@@ -157,9 +157,9 @@
       "Gastos de instalación"
     ],
     "enlace": "https://www.pronabec.gob.pe/",
-    "imagen": "https://www.gob.pe/assets/escudo-rojo-200-f4bf73f7.png",
-    "imagenCredito": "Imagen: Plataforma del Estado Peruano (gob.pe)",
-    "fuente": "Pronabec"
+    "imagen": null,
+    "imagenCredito": null,
+    "fuente": "Carga manual"
   },
   {
     "id": "santander-estudios-2026",
@@ -217,9 +217,9 @@
       "Movilidad local"
     ],
     "enlace": "https://www.pronabec.gob.pe/beca-18/",
-    "imagen": "https://www.gob.pe/assets/escudo-rojo-200-f4bf73f7.png",
-    "imagenCredito": "Imagen: Plataforma del Estado Peruano (gob.pe)",
-    "fuente": "Pronabec"
+    "imagen": null,
+    "imagenCredito": null,
+    "fuente": "Carga manual"
   },
   {
     "id": "daad-epos-2027",
@@ -281,9 +281,9 @@
       "Acompañamiento académico"
     ],
     "enlace": "https://www.pronabec.gob.pe/",
-    "imagen": "https://www.gob.pe/assets/escudo-rojo-200-f4bf73f7.png",
-    "imagenCredito": "Imagen: Plataforma del Estado Peruano (gob.pe)",
-    "fuente": "Pronabec"
+    "imagen": null,
+    "imagenCredito": null,
+    "fuente": "Carga manual"
   },
   {
     "id": "chevening-2027",
@@ -342,9 +342,9 @@
       "Subvención de conectividad"
     ],
     "enlace": "https://www.pronabec.gob.pe/",
-    "imagen": "https://www.gob.pe/assets/escudo-rojo-200-f4bf73f7.png",
-    "imagenCredito": "Imagen: Plataforma del Estado Peruano (gob.pe)",
-    "fuente": "Pronabec"
+    "imagen": null,
+    "imagenCredito": null,
+    "fuente": "Carga manual"
   },
   {
     "id": "erasmus-mundus-2027",
@@ -403,9 +403,9 @@
       "Materiales de estudio"
     ],
     "enlace": "https://www.pronabec.gob.pe/",
-    "imagen": "https://www.gob.pe/assets/escudo-rojo-200-f4bf73f7.png",
-    "imagenCredito": "Imagen: Plataforma del Estado Peruano (gob.pe)",
-    "fuente": "Pronabec"
+    "imagen": null,
+    "imagenCredito": null,
+    "fuente": "Carga manual"
   },
   {
     "id": "talento-militar-2027",
@@ -436,9 +436,9 @@
       "Materiales"
     ],
     "enlace": "https://www.pronabec.gob.pe/",
-    "imagen": "https://www.gob.pe/assets/escudo-rojo-200-f4bf73f7.png",
-    "imagenCredito": "Imagen: Plataforma del Estado Peruano (gob.pe)",
-    "fuente": "Pronabec"
+    "imagen": null,
+    "imagenCredito": null,
+    "fuente": "Carga manual"
   },
   {
     "id": "oea-alianzas-2027",
@@ -534,9 +534,9 @@
       "Instalación"
     ],
     "enlace": "https://www.pronabec.gob.pe/",
-    "imagen": "https://www.gob.pe/assets/escudo-rojo-200-f4bf73f7.png",
-    "imagenCredito": "Imagen: Plataforma del Estado Peruano (gob.pe)",
-    "fuente": "Pronabec"
+    "imagen": null,
+    "imagenCredito": null,
+    "fuente": "Carga manual"
   },
   {
     "id": "eiffel-2027",
@@ -599,9 +599,9 @@
       "Movilidad"
     ],
     "enlace": "https://www.pronabec.gob.pe/",
-    "imagen": "https://www.gob.pe/assets/escudo-rojo-200-f4bf73f7.png",
-    "imagenCredito": "Imagen: Plataforma del Estado Peruano (gob.pe)",
-    "fuente": "Pronabec"
+    "imagen": null,
+    "imagenCredito": null,
+    "fuente": "Carga manual"
   },
   {
     "id": "carolina-2027",

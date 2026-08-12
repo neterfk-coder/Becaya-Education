@@ -1,8 +1,30 @@
 /* ============================================================
-   sync-pronabec.mjs
+   sync-pronabec.mjs   ⚠  HOY NO FUNCIONA — LEER ANTES DE USAR
    ------------------------------------------------------------
-   Trae las convocatorias vigentes desde la API de datos abiertos
-   de Pronabec y las deja en data/pronabec.json.
+   Comprobado el 2026-08-12:
+
+   1. El host que indica la documentación oficial de Pronabec,
+      api.datosabiertos.pronabec.gob.pe, NO EXISTE en DNS. Devuelve
+      NXDOMAIN tanto desde un DNS doméstico como desde 8.8.8.8. Todos
+      los ejemplos de su documentación apuntan ahí, así que la clave
+      de API no sirve de nada: no hay servidor al que pedírsela.
+
+   2. Los endpoints internos del portal SÍ responden y no piden clave:
+        https://datosabiertos.pronabec.gob.pe/Dataset/ListarConvocatorias
+      Pero sus 403 convocatorias se detienen en DICIEMBRE DE 2021, y el
+      dataset "ConvocatoriaCarreraVigentes" devuelve una lista vacía.
+
+   Conclusión: no hay fuente automática de convocatorias vigentes. Para
+   mantener el catálogo al día usa scripts/vigilar-pronabec.mjs, que
+   vigila la web de Pronabec (esa sí está viva) y avisa cuando algo
+   cambia para que una persona lo confirme.
+
+   Este archivo se conserva por si Pronabec revive su API. Si eso pasa,
+   corrige API y RECURSO abajo: el nombre real del recurso es
+   "Convocatorias" o "ConvocatoriaCarreraVigentes", no el que había aquí.
+   ------------------------------------------------------------
+   Trae las convocatorias desde la API de datos abiertos de
+   Pronabec y las deja en data/pronabec.json.
 
    Uso:
      PRONABEC_API_KEY=tu_clave node scripts/sync-pronabec.mjs

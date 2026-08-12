@@ -60,43 +60,52 @@ académica y de dinero; un voluntariado no. Mezclarlos en una sola lista esconde
 entre lo otro para gente que busca con una intención distinta. El detalle completo del
 porqué está en `docs/esquema-datos.md`.
 
-## Los datos que trae son de ejemplo
+## De dónde salen las fechas
 
-Las instituciones y organizaciones son reales, y sus enlaces oficiales están verificados,
-pero **todas las fechas son inventadas**: se pusieron a mano para que el calendario tenga
-contenido en todos sus grupos y se pueda ver cómo se comporta la interfaz. Ninguna
-corresponde a una convocatoria real.
+Todas las fechas publicadas están **verificadas contra la web oficial**, una por una, y
+cada ficha guarda cuándo se comprobó y con qué evidencia (`verificadaEl` y
+`notaVerificacion`). Si una fecha no se puede señalar en la página oficial, la beca no se
+publica. Una fecha inventada es peor que una beca ausente.
 
-Mientras `data/manual.json` siga marcado con `"ejemplo": true`, la web muestra una franja
-roja fija arriba advirtiéndolo, y en la portada dice "Fechas de ejemplo, sin verificar" en
-lugar de una fecha de actualización. Ese aviso desaparece solo al cargar datos verificados
-y poner `"ejemplo": false` — no hay que acordarse de quitarlo a mano.
+### No existe una fuente automática. Esto se investigó a fondo:
 
-**El sync de Pronabec nunca se ha ejecutado**, así que hoy el 100% del catálogo es carga
-manual. Por eso ninguna beca lleva `"fuente": "Pronabec"`: ese valor queda reservado para
-lo que de verdad venga de su API.
+| Vía | Qué se encontró |
+|---|---|
+| API de datos abiertos de Pronabec | El host de su documentación (`api.datosabiertos.pronabec.gob.pe`) **no existe en DNS**. Sus endpoints internos sí responden y no piden clave, pero los datos de convocatorias **se detienen en diciembre de 2021**. Inservible para fechas vigentes. |
+| Web de Pronabec | **Viva y mantenida.** `pronabec.gob.pe/concursos-becas-creditos/` lista los concursos en proceso. Es la fuente real. |
+| Chevening, DAAD, Fulbright… | Sin API. Solo páginas web. |
 
-Para las becas hay dos caminos, y lo razonable es usar los dos:
+### Por qué no se leen las fechas automáticamente
 
-**1. Automático, para las becas del Estado peruano.** Pronabec publica una API de datos
-abiertos gratuita que incluye las convocatorias vigentes. Pide tu clave en
-<https://datosabiertos.pronabec.gob.pe/developer/Api> y corre:
+Pronabec escribe los plazos en prosa. En su web está la frase *"la postulación es hasta el
+martes 4 de noviembre"*, **sin año**. El 4 de noviembre cae martes en 2025, no en 2026: un
+script que asumiera el año en curso publicaría un plazo equivocado por doce meses.
+
+Lo único legible por máquina es el contador de cuenta regresiva de algunas páginas
+(`data-date`), que trae un timestamp exacto. De ahí salieron las fechas de este catálogo,
+contrastadas además con el texto de la página.
+
+### El flujo real: el robot detecta, el humano confirma
 
 ```bash
-PRONABEC_API_KEY=tu_clave node scripts/sync-pronabec.mjs
+node scripts/vigilar-pronabec.mjs            # ¿cambió alguna convocatoria?
+node scripts/vigilar-pronabec.mjs --guardar  # darlas por vistas
 ```
 
-Esto escribe `data/pronabec.json` y llama automáticamente a `construir-datos.mjs`, que lo
-une con `data/manual.json` sin pisarlo. Antes del primer uso, abre el script y confirma que
-el nombre del recurso y los nombres de campo coincidan con lo que muestra la documentación
-oficial: la API los publica en español y varían entre datasets.
+Recorre las páginas de concursos, guarda una huella del contenido y avisa de tres cosas:
+convocatorias **nuevas**, **plazos que se movieron**, y páginas cuyo texto cambió. Además
+recuerda qué fichas del catálogo llevan más de 30 días sin revisarse.
 
-**2. Manual, para las becas internacionales y para todos los voluntariados.** Chevening,
-Fulbright, DAAD, Erasmus Mundus, Eiffel y compañía no tienen API, y tampoco la tiene
-ninguna organización de voluntariado. Se cargan editando `data/manual.json` (becas) o
-`data/voluntariados-manual.json` (voluntariados) siguiendo `docs/esquema-datos.md`, y
-corriendo `node scripts/construir-datos.mjs`. Son unas cuantas decenas, y sus fechas
-cambian una o dos veces al año: es perfectamente manejable.
+Corre solo cada lunes con `.github/workflows/vigilar-convocatorias.yml` y abre un issue
+cuando hay novedades. **Nunca publica una fecha por su cuenta**: solo te dice dónde mirar.
+
+Los voluntariados y las becas internacionales se cargan igual, a mano, editando
+`data/voluntariados-manual.json` y `data/manual.json` según `docs/esquema-datos.md`.
+
+### Si algún día la API de Pronabec revive
+
+`scripts/sync-pronabec.mjs` sigue en el repositorio para ese caso, pero **hoy no funciona**:
+apunta a un host que no resuelve. Léelo antes de usarlo.
 
 ## Cómo funciona el calendario
 

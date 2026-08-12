@@ -780,6 +780,9 @@ button{font-family:inherit;}
 
 /* Cuando la beca no trae un enlace oficial válido, en lugar del botón
    se explica por qué. Vale más eso que un botón que no lleva a nada. */
+.panel__sin-dato{
+  font-size:14px;color:var(--gris-claro);line-height:1.55;
+}
 .panel__sin-enlace{
   font-size:14px;color:var(--gris-claro);font-style:italic;
   padding:12px 14px;border:1px dashed var(--borde);border-radius:var(--radio-sm);

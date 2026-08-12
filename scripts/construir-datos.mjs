@@ -100,11 +100,25 @@ function revisar(beca, origen) {
   if (!beca.id || typeof beca.id !== "string") problemas.push("sin id");
   if (!beca.nombre || typeof beca.nombre !== "string") problemas.push("sin nombre");
 
-  if (!esFechaISO(beca.apertura)) problemas.push(`apertura inválida (${beca.apertura})`);
-  if (beca.cierre !== null && beca.cierre !== undefined && !esFechaISO(beca.cierre)) {
-    problemas.push(`cierre inválido (${beca.cierre})`);
+  /* Las dos fechas son opcionales por separado, pero al menos una tiene
+     que estar: sin ninguna no se puede decir nada sobre la convocatoria.
+
+     Aceptar apertura en null es deliberado. En la práctica lo habitual es
+     conocer el plazo de cierre y no la fecha exacta en que abrió; antes
+     eso obligaba a inventarse una apertura, que es justo lo que este
+     proyecto no debe hacer. Sin apertura, la beca se muestra como abierta
+     con la cuenta regresiva al cierre, que es la verdad conocida. */
+  const conApertura = beca.apertura === null || beca.apertura === undefined
+    ? false
+    : (esFechaISO(beca.apertura) || (problemas.push(`apertura inválida (${beca.apertura})`), false));
+  const conCierre = beca.cierre === null || beca.cierre === undefined
+    ? false
+    : (esFechaISO(beca.cierre) || (problemas.push(`cierre inválido (${beca.cierre})`), false));
+
+  if (!conApertura && !conCierre) {
+    problemas.push("sin apertura ni cierre: no hay nada verificable que mostrar");
   }
-  if (esFechaISO(beca.apertura) && esFechaISO(beca.cierre) && beca.cierre < beca.apertura) {
+  if (conApertura && conCierre && beca.cierre < beca.apertura) {
     problemas.push(`cierra (${beca.cierre}) antes de abrir (${beca.apertura})`);
   }
 
@@ -145,7 +159,7 @@ function revisar(beca, origen) {
       pais: typeof beca.pais === "string" && beca.pais.trim() ? beca.pais : "Sin especificar",
       cobertura,
       areas: areas.length > 0 ? areas : ["Todas las áreas"],
-      apertura: beca.apertura,
+      apertura: esFechaISO(beca.apertura) ? beca.apertura : null,
       cierre: esFechaISO(beca.cierre) ? beca.cierre : null,
       resumen: typeof beca.resumen === "string" ? beca.resumen : "",
       requisitos: listaDeTextos(beca.requisitos),
@@ -153,7 +167,12 @@ function revisar(beca, origen) {
       enlace,
       imagen,
       imagenCredito: imagen && typeof beca.imagenCredito === "string" ? beca.imagenCredito : null,
-      fuente: typeof beca.fuente === "string" && beca.fuente.trim() ? beca.fuente : origen
+      fuente: typeof beca.fuente === "string" && beca.fuente.trim() ? beca.fuente : origen,
+      /* Rastro de auditoría: cuándo se comprobó esta ficha contra la web
+         oficial y con qué evidencia. Lo usa vigilar-pronabec.mjs para
+         avisar de las fichas que llevan mucho sin revisarse. */
+      verificadaEl: esFechaISO(beca.verificadaEl) ? beca.verificadaEl : null,
+      notaVerificacion: typeof beca.notaVerificacion === "string" ? beca.notaVerificacion : null
     }
   };
 }
@@ -170,11 +189,19 @@ function revisarVoluntariado(v, origen) {
   if (!v.id || typeof v.id !== "string") problemas.push("sin id");
   if (!v.nombre || typeof v.nombre !== "string") problemas.push("sin nombre");
 
-  if (!esFechaISO(v.apertura)) problemas.push(`apertura inválida (${v.apertura})`);
-  if (v.cierre !== null && v.cierre !== undefined && !esFechaISO(v.cierre)) {
-    problemas.push(`cierre inválido (${v.cierre})`);
+  /* Misma regla que en becas: al menos una de las dos fechas, y se
+     acepta no conocer la apertura (ver el comentario en revisar()). */
+  const vConApertura = v.apertura === null || v.apertura === undefined
+    ? false
+    : (esFechaISO(v.apertura) || (problemas.push(`apertura inválida (${v.apertura})`), false));
+  const vConCierre = v.cierre === null || v.cierre === undefined
+    ? false
+    : (esFechaISO(v.cierre) || (problemas.push(`cierre inválido (${v.cierre})`), false));
+
+  if (!vConApertura && !vConCierre) {
+    problemas.push("sin apertura ni cierre: no hay nada verificable que mostrar");
   }
-  if (esFechaISO(v.apertura) && esFechaISO(v.cierre) && v.cierre < v.apertura) {
+  if (vConApertura && vConCierre && v.cierre < v.apertura) {
     problemas.push(`cierra (${v.cierre}) antes de abrir (${v.apertura})`);
   }
 
@@ -205,7 +232,7 @@ function revisarVoluntariado(v, origen) {
       pais: typeof v.pais === "string" && v.pais.trim() ? v.pais : "Sin especificar",
       modalidad,
       areas: areas.length > 0 ? areas : ["General"],
-      apertura: v.apertura,
+      apertura: esFechaISO(v.apertura) ? v.apertura : null,
       cierre: esFechaISO(v.cierre) ? v.cierre : null,
       resumen: typeof v.resumen === "string" ? v.resumen : "",
       requisitos: listaDeTextos(v.requisitos),
@@ -213,7 +240,9 @@ function revisarVoluntariado(v, origen) {
       enlace,
       imagen,
       imagenCredito: imagen && typeof v.imagenCredito === "string" ? v.imagenCredito : null,
-      fuente: typeof v.fuente === "string" && v.fuente.trim() ? v.fuente : origen
+      fuente: typeof v.fuente === "string" && v.fuente.trim() ? v.fuente : origen,
+      verificadaEl: esFechaISO(v.verificadaEl) ? v.verificadaEl : null,
+      notaVerificacion: typeof v.notaVerificacion === "string" ? v.notaVerificacion : null
     }
   };
 }
@@ -248,9 +277,12 @@ function fusionar(fuentes, revisor) {
   }
 
   /* Orden estable por apertura: así el diff del repositorio es legible
-     y no cambia de un día para otro sin motivo. */
+     y no cambia de un día para otro sin motivo. Las que no tienen
+     apertura conocida se ordenan por su cierre, y si tampoco lo
+     tuvieran, van al final: nunca se compara contra null. */
+  const clave = (x) => x.apertura || x.cierre || "9999-12-31";
   return Array.from(porId.values()).sort((a, b) =>
-    a.apertura === b.apertura ? a.id.localeCompare(b.id) : a.apertura.localeCompare(b.apertura)
+    clave(a) === clave(b) ? a.id.localeCompare(b.id) : clave(a).localeCompare(clave(b))
   );
 }
 

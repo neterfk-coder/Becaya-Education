@@ -150,15 +150,23 @@ test("el orden es consistente al invertir los argumentos", () => {
 
 /* ---------- Catálogo publicado ---------- */
 
+/* Un catálogo vacío es un estado VÁLIDO y deliberado: es preferible no
+   mostrar nada a mostrar fechas sin verificar. Por eso estas pruebas
+   comprueban que lo publicado esté bien, no que haya algo publicado. */
+const ISO = /^\d{4}-\d{2}-\d{2}$/;
+
 test("todas las becas publicadas tienen fecha y enlace válidos", async () => {
   const becas = JSON.parse(readFileSync(resolve(RAIZ, "data/becas.json"), "utf8"));
-  assert.ok(becas.length > 0, "el catálogo no puede estar vacío");
 
   const ids = new Set();
   for (const b of becas) {
-    assert.match(b.apertura, /^\d{4}-\d{2}-\d{2}$/, `${b.id}: apertura inválida`);
-    if (b.cierre !== null) {
-      assert.match(b.cierre, /^\d{4}-\d{2}-\d{2}$/, `${b.id}: cierre inválido`);
+    /* La apertura puede ser null: lo habitual es conocer el plazo de
+       cierre y no la fecha exacta en que se abrió. Lo que no puede
+       faltar son las dos a la vez. */
+    if (b.apertura !== null) assert.match(b.apertura, ISO, `${b.id}: apertura inválida`);
+    if (b.cierre !== null) assert.match(b.cierre, ISO, `${b.id}: cierre inválido`);
+    assert.ok(b.apertura || b.cierre, `${b.id}: no tiene ninguna fecha`);
+    if (b.apertura && b.cierre) {
       assert.ok(b.cierre >= b.apertura, `${b.id}: cierra antes de abrir`);
     }
     assert.match(b.enlace, /^https?:\/\//, `${b.id}: enlace no es http(s)`);
@@ -167,16 +175,30 @@ test("todas las becas publicadas tienen fecha y enlace válidos", async () => {
   }
 });
 
+test("toda beca publicada deja constancia de cuándo se verificó", async () => {
+  /* La regla central del proyecto: si está publicada, alguien la
+     comprobó contra la web oficial y anotó cuándo. Sin esto, el
+     catálogo envejece sin que nadie pueda saber cuánto. */
+  const becas = JSON.parse(readFileSync(resolve(RAIZ, "data/becas.json"), "utf8"));
+  for (const b of becas) {
+    assert.match(String(b.verificadaEl), ISO, `${b.id}: sin fecha de verificación`);
+    assert.ok(
+      typeof b.notaVerificacion === "string" && b.notaVerificacion.length > 20,
+      `${b.id}: sin nota que explique de dónde salió la fecha`
+    );
+  }
+});
+
 test("todos los voluntariados publicados tienen fecha y enlace válidos", async () => {
   const voluntariados = JSON.parse(readFileSync(resolve(RAIZ, "data/voluntariados.json"), "utf8"));
-  assert.ok(voluntariados.length > 0, "el catálogo de voluntariados no puede estar vacío");
 
   const MODALIDADES = ["presencial", "virtual", "hibrida"];
   const ids = new Set();
   for (const v of voluntariados) {
-    assert.match(v.apertura, /^\d{4}-\d{2}-\d{2}$/, `${v.id}: apertura inválida`);
-    if (v.cierre !== null) {
-      assert.match(v.cierre, /^\d{4}-\d{2}-\d{2}$/, `${v.id}: cierre inválido`);
+    if (v.apertura !== null) assert.match(v.apertura, ISO, `${v.id}: apertura inválida`);
+    if (v.cierre !== null) assert.match(v.cierre, ISO, `${v.id}: cierre inválido`);
+    assert.ok(v.apertura || v.cierre, `${v.id}: no tiene ninguna fecha`);
+    if (v.apertura && v.cierre) {
       assert.ok(v.cierre >= v.apertura, `${v.id}: cierra antes de abrir`);
     }
     assert.match(v.enlace, /^https?:\/\//, `${v.id}: enlace no es http(s)`);

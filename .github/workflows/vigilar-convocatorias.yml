@@ -1,0 +1,75 @@
+# Vigila las páginas de concursos de Pronabec y avisa cuando cambian.
+#
+# NO publica fechas por su cuenta: solo detecta el cambio y abre (o
+# actualiza) un issue para que una persona lo revise y confirme. Esa
+# separación es deliberada — Pronabec escribe los plazos en prosa y sin
+# año, así que interpretarlos automáticamente es cómo se terminan
+# publicando fechas equivocadas.
+
+name: Vigilar convocatorias
+
+on:
+  schedule:
+    - cron: "0 12 * * 1"    # lunes 07:00 en Perú
+  workflow_dispatch:         # y con un botón, cuando quieras
+
+permissions:
+  contents: write            # para guardar el estado de la vigilancia
+  issues: write              # para avisar de los cambios
+
+jobs:
+  vigilar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Revisar si cambió alguna convocatoria
+        id: revisar
+        run: |
+          set +e
+          node scripts/vigilar-pronabec.mjs --guardar > informe.txt 2>&1
+          echo "codigo=$?" >> "$GITHUB_OUTPUT"
+          set -e
+          cat informe.txt
+
+      - name: Guardar el nuevo estado de la vigilancia
+        run: |
+          git config user.name "becaya bot"
+          git config user.email "bot@becaya.pe"
+          git add data/vigilancia-pronabec.json
+          git diff --staged --quiet || git commit -m "Vigilancia de convocatorias al $(date +%F)"
+          git push
+
+      # Solo cuando hubo cambios (el script sale con código 1).
+      - name: Avisar en un issue
+        if: steps.revisar.outputs.codigo == '1'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const informe = fs.readFileSync('informe.txt', 'utf8');
+            const hoy = new Date().toISOString().slice(0, 10);
+            const cuerpo = [
+              'La vigilancia detectó cambios en las páginas de convocatorias de Pronabec.',
+              '',
+              '**Qué hacer:** entra a las páginas marcadas, confirma las fechas reales y',
+              'actualiza `data/manual.json`. Luego corre `node scripts/construir-datos.mjs`.',
+              '',
+              'No copies fechas sin verlas en la web oficial.',
+              '',
+              '```',
+              informe.trim(),
+              '```'
+            ].join('\n');
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `Convocatorias cambiaron — revisar (${hoy})`,
+              body: cuerpo,
+              labels: ['convocatorias']
+            });

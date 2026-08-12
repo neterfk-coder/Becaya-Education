@@ -460,6 +460,18 @@
      `actualizarUrl` es false cuando el panel se abre para reflejar una
      URL que ya trae el id (al cargar la página o con atrás/adelante del
      navegador): en ese caso no hay que volver a tocar el historial. */
+  /* Una lista vacía no se pinta como una lista vacía: se explica por qué
+     no hay nada. Muchas convocatorias reales solo publican el plazo y
+     remiten a sus bases; inventarles requisitos para rellenar la ficha
+     sería exactamente lo que este proyecto no hace. */
+  function seccionLista(titulo, elementos) {
+    const items = Array.isArray(elementos) ? elementos : [];
+    const cuerpo = items.length > 0
+      ? `<ul class="lista-requisitos">${items.map((x) => `<li>${escapar(x)}</li>`).join("")}</ul>`
+      : `<p class="panel__sin-dato">No publicado en la web oficial. Revísalo en las bases de la convocatoria.</p>`;
+    return `<div class="panel__seccion"><h4>${escapar(titulo)}</h4>${cuerpo}</div>`;
+  }
+
   function abrirPanel(id, tipo, origen, actualizarUrl = true) {
     const esVol = tipo === "voluntariado";
     const item = esVol
@@ -515,15 +527,8 @@
         <div class="panel__fechas">${datosEstado}</div>
       </div>
 
-      <div class="panel__seccion">
-        <h4>${esVol ? "Qué ofrece" : "Qué cubre"}</h4>
-        <ul class="lista-requisitos">${item.beneficios.map((x) => `<li>${escapar(x)}</li>`).join("")}</ul>
-      </div>
-
-      <div class="panel__seccion">
-        <h4>Requisitos principales</h4>
-        <ul class="lista-requisitos">${item.requisitos.map((x) => `<li>${escapar(x)}</li>`).join("")}</ul>
-      </div>
+      ${seccionLista(esVol ? "Qué ofrece" : "Qué cubre", item.beneficios)}
+      ${seccionLista("Requisitos principales", item.requisitos)}
 
       <div class="panel__seccion">
         <h4>${esVol ? "Temas" : "Áreas de estudio"}</h4>

@@ -1,0 +1,70 @@
+{
+  "_comentario": "GENERADO por scripts/vigilar-pronabec.mjs. Huella del contenido de cada página de concurso, para detectar cambios. No editar a mano.",
+  "revisadoEl": "2026-08-12",
+  "paginas": {
+    "beca-18": {
+      "huella": "e9f0773e1e4850b9",
+      "cierre": null
+    },
+    "beca-alianza-del-pacifico": {
+      "huella": "eb11f78f2cf95b7b",
+      "cierre": null
+    },
+    "beca-espana-posgrado": {
+      "huella": "45112568b7c1db0d",
+      "cierre": "2026-10-20"
+    },
+    "beca-generacion-bicentenario": {
+      "huella": "e277ceb15add6015",
+      "cierre": null
+    },
+    "beca-hijos-de-docentes": {
+      "huella": "e340d432e71008e8",
+      "cierre": null
+    },
+    "beca-inclusion-carreras-profesionales": {
+      "huella": "e09750c9821b56e7",
+      "cierre": null
+    },
+    "beca-india-itec-2026-2027": {
+      "huella": "4a7d6209ca839aeb",
+      "cierre": "2026-11-14"
+    },
+    "beca-permanencia": {
+      "huella": "0705556f6d455321",
+      "cierre": null
+    },
+    "beca-peru": {
+      "huella": "fa160b0108aa1d7f",
+      "cierre": null
+    },
+    "beca-productiva": {
+      "huella": "85432d1ecfdeff82",
+      "cierre": null
+    },
+    "beca-tailandia-2026": {
+      "huella": "7bbcf170ffc4cb0d",
+      "cierre": "2026-11-14"
+    },
+    "beca-tailandia-servidores": {
+      "huella": "951c3417bc123839",
+      "cierre": "2026-11-14"
+    },
+    "beca-tec": {
+      "huella": "60688b18280cce8e",
+      "cierre": null
+    },
+    "credito-maestria": {
+      "huella": "03f28c4b3f138923",
+      "cierre": null
+    },
+    "credito-pro": {
+      "huella": "e2da13fb1cbd904a",
+      "cierre": null
+    },
+    "credito-talento": {
+      "huella": "85e84f4f9699d392",
+      "cierre": null
+    }
+  }
+}

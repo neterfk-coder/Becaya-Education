@@ -1,0 +1,658 @@
+/* ============================================================
+   datos.js — GENERADO AUTOMÁTICAMENTE, NO EDITAR A MANO
+   ------------------------------------------------------------
+   Lo escribe scripts/construir-datos.mjs y se sobrescribe entero
+   en cada build. Para cambiar un registro cargado a mano edita
+   data/manual.json y vuelve a correr:
+
+     node scripts/construir-datos.mjs
+
+   Generado el 2026-08-12T20:49:56.066Z.
+   ============================================================ */
+
+const BECAS = [
+  {
+    "id": "beca-18-2026",
+    "nombre": "Beca 18 — Convocatoria 2026",
+    "institucion": "Pronabec",
+    "nivel": "pregrado",
+    "destino": "peru",
+    "pais": "Perú",
+    "cobertura": "total",
+    "areas": [
+      "Todas las áreas"
+    ],
+    "apertura": "2025-07-15",
+    "cierre": "2025-09-12",
+    "resumen": "Ciclo anterior de Beca 18, incluido como referencia para anticipar las fechas de la siguiente convocatoria.",
+    "requisitos": [
+      "Secundaria concluida con alto rendimiento",
+      "Clasificación socioeconómica de pobreza",
+      "Menos de 22 años",
+      "Sin estudios superiores concluidos"
+    ],
+    "beneficios": [
+      "Matrícula y pensión completas",
+      "Alimentación y vivienda",
+      "Materiales"
+    ],
+    "enlace": "https://www.pronabec.gob.pe/beca-18/",
+    "imagen": "https://www.gob.pe/assets/escudo-rojo-200-f4bf73f7.png",
+    "imagenCredito": "Imagen: Plataforma del Estado Peruano (gob.pe)",
+    "fuente": "Pronabec"
+  },
+  {
+    "id": "suiza-excelencia-2026",
+    "nombre": "Swiss Government Excellence Scholarships",
+    "institucion": "Gobierno de Suiza",
+    "nivel": "posgrado",
+    "destino": "extranjero",
+    "pais": "Suiza",
+    "cobertura": "total",
+    "areas": [
+      "Ciencias básicas",
+      "Ingeniería y tecnología",
+      "Ciencias de la salud",
+      "Artes y humanidades"
+    ],
+    "apertura": "2025-09-01",
+    "cierre": "2025-11-15",
+    "resumen": "Becas de investigación y doctorado en universidades suizas. La convocatoria suele reabrirse cada septiembre.",
+    "requisitos": [
+      "Grado de maestría concluido",
+      "Carta de aceptación de un supervisor en Suiza",
+      "Menos de 35 años",
+      "Postulación a través de la embajada suiza"
+    ],
+    "beneficios": [
+      "Estipendio mensual",
+      "Exoneración de matrícula",
+      "Seguro de salud",
+      "Pasaje aéreo"
+    ],
+    "enlace": "https://www.sbfi.admin.ch/",
+    "imagen": null,
+    "imagenCredito": null,
+    "fuente": "Carga manual"
+  },
+  {
+    "id": "beca-permanencia-2026-i",
+    "nombre": "Beca Permanencia 2026-I",
+    "institucion": "Pronabec",
+    "nivel": "pregrado",
+    "destino": "peru",
+    "pais": "Perú",
+    "cobertura": "total",
+    "areas": [
+      "Todas las áreas"
+    ],
+    "apertura": "2026-02-10",
+    "cierre": "2026-03-05",
+    "resumen": "Primera convocatoria del año de Beca Permanencia. La segunda ya está abierta.",
+    "requisitos": [
+      "Matrícula vigente en universidad pública elegible",
+      "Dos semestres aprobados",
+      "Tercio superior",
+      "Clasificación socioeconómica vigente"
+    ],
+    "beneficios": [
+      "Subvención mensual",
+      "Materiales de estudio"
+    ],
+    "enlace": "https://www.pronabec.gob.pe/",
+    "imagen": "https://www.gob.pe/assets/escudo-rojo-200-f4bf73f7.png",
+    "imagenCredito": "Imagen: Plataforma del Estado Peruano (gob.pe)",
+    "fuente": "Pronabec"
+  },
+  {
+    "id": "fulbright-maestria-2027",
+    "nombre": "Fulbright Perú — Maestría en Estados Unidos",
+    "institucion": "Comisión Fulbright Perú",
+    "nivel": "posgrado",
+    "destino": "extranjero",
+    "pais": "Estados Unidos",
+    "cobertura": "total",
+    "areas": [
+      "Ciencias sociales",
+      "Ingeniería y tecnología",
+      "Artes y humanidades",
+      "Negocios y economía"
+    ],
+    "apertura": "2026-06-15",
+    "cierre": "2026-08-18",
+    "resumen": "Financiamiento de estudios de maestría en universidades de Estados Unidos para profesionales peruanos con trayectoria académica destacada.",
+    "requisitos": [
+      "Nacionalidad peruana y residencia en el Perú",
+      "Grado de bachiller o título profesional",
+      "Dominio avanzado del inglés (TOEFL o IELTS)",
+      "Experiencia profesional relevante en el área de postulación"
+    ],
+    "beneficios": [
+      "Matrícula",
+      "Manutención mensual",
+      "Seguro de salud",
+      "Pasajes internacionales"
+    ],
+    "enlace": "https://fulbright.pe/",
+    "imagen": null,
+    "imagenCredito": null,
+    "fuente": "Carga manual"
+  },
+  {
+    "id": "generacion-bicentenario-2027",
+    "nombre": "Beca Generación del Bicentenario 2027",
+    "institucion": "Pronabec",
+    "nivel": "posgrado",
+    "destino": "extranjero",
+    "pais": "Varios países",
+    "cobertura": "total",
+    "areas": [
+      "Ingeniería y tecnología",
+      "Ciencias básicas",
+      "Ciencias de la salud",
+      "Negocios y economía"
+    ],
+    "apertura": "2026-07-01",
+    "cierre": "2026-09-30",
+    "resumen": "Maestrías y doctorados en universidades del top mundial para profesionales peruanos, con compromiso de retorno al país.",
+    "requisitos": [
+      "Grado de bachiller o maestría según la modalidad",
+      "Carta de admisión de una universidad elegible del ranking",
+      "Promedio ponderado mínimo exigido en las bases",
+      "Compromiso de retorno y permanencia en el Perú"
+    ],
+    "beneficios": [
+      "Matrícula y pensión",
+      "Manutención mensual",
+      "Pasajes",
+      "Seguro médico",
+      "Gastos de instalación"
+    ],
+    "enlace": "https://www.pronabec.gob.pe/",
+    "imagen": "https://www.gob.pe/assets/escudo-rojo-200-f4bf73f7.png",
+    "imagenCredito": "Imagen: Plataforma del Estado Peruano (gob.pe)",
+    "fuente": "Pronabec"
+  },
+  {
+    "id": "santander-estudios-2026",
+    "nombre": "Becas Santander Estudios — Movilidad",
+    "institucion": "Banco Santander",
+    "nivel": "ambos",
+    "destino": "extranjero",
+    "pais": "España y América Latina",
+    "cobertura": "parcial",
+    "areas": [
+      "Todas las áreas"
+    ],
+    "apertura": "2026-07-10",
+    "cierre": "2026-09-05",
+    "resumen": "Apoyo económico para un semestre de intercambio académico en universidades socias de la red Santander en Iberoamérica.",
+    "requisitos": [
+      "Estar matriculado en una universidad de la red Santander",
+      "Haber aprobado al menos el 50 % de la carrera",
+      "Promedio ponderado igual o superior al exigido por tu universidad",
+      "Registro en Santander Open Academy"
+    ],
+    "beneficios": [
+      "Apoyo económico único",
+      "Matrícula en la universidad de destino"
+    ],
+    "enlace": "https://www.becas-santander.com/",
+    "imagen": null,
+    "imagenCredito": null,
+    "fuente": "Carga manual"
+  },
+  {
+    "id": "beca-18-2027",
+    "nombre": "Beca 18 — Convocatoria 2027",
+    "institucion": "Pronabec",
+    "nivel": "pregrado",
+    "destino": "peru",
+    "pais": "Perú",
+    "cobertura": "total",
+    "areas": [
+      "Todas las áreas"
+    ],
+    "apertura": "2026-07-20",
+    "cierre": "2026-09-15",
+    "resumen": "Beca integral para egresados de colegio con alto rendimiento y condición socioeconómica elegible, para estudiar una carrera completa en universidades e institutos elegibles del país.",
+    "requisitos": [
+      "Haber terminado la secundaria en colegio público o privado con alto rendimiento",
+      "Estar registrado en el Sisfoh como pobre o pobre extremo",
+      "Tener menos de 22 años al cierre de la postulación",
+      "No contar con estudios superiores concluidos"
+    ],
+    "beneficios": [
+      "Matrícula y pensión completas",
+      "Alimentación y vivienda",
+      "Materiales de estudio",
+      "Movilidad local"
+    ],
+    "enlace": "https://www.pronabec.gob.pe/beca-18/",
+    "imagen": "https://www.gob.pe/assets/escudo-rojo-200-f4bf73f7.png",
+    "imagenCredito": "Imagen: Plataforma del Estado Peruano (gob.pe)",
+    "fuente": "Pronabec"
+  },
+  {
+    "id": "daad-epos-2027",
+    "nombre": "DAAD EPOS — Posgrado en desarrollo",
+    "institucion": "Servicio Alemán de Intercambio Académico",
+    "nivel": "posgrado",
+    "destino": "extranjero",
+    "pais": "Alemania",
+    "cobertura": "total",
+    "areas": [
+      "Ciencias sociales",
+      "Ciencias agrarias",
+      "Ingeniería y tecnología",
+      "Ciencias de la salud"
+    ],
+    "apertura": "2026-08-01",
+    "cierre": "2026-10-15",
+    "resumen": "Maestrías y doctorados en universidades alemanas orientados a la cooperación al desarrollo, para profesionales del sector público y organizaciones sociales.",
+    "requisitos": [
+      "Título universitario obtenido hace menos de seis años",
+      "Mínimo dos años de experiencia profesional",
+      "Certificado de idioma inglés o alemán según el programa",
+      "Trabajar en una institución vinculada al desarrollo"
+    ],
+    "beneficios": [
+      "Estipendio mensual",
+      "Seguro de salud",
+      "Pasaje aéreo",
+      "Curso de idioma alemán"
+    ],
+    "enlace": "https://www.daad.de/",
+    "imagen": "https://api.daad.de/api/imagefp/og/0/0/media/daad_de/der-daad/kommunikation-publikationen/presse/daad_flaggen_pankau_web.jpg",
+    "imagenCredito": "Imagen: DAAD (daad.de)",
+    "fuente": "Carga manual"
+  },
+  {
+    "id": "beca-permanencia-2026-ii",
+    "nombre": "Beca Permanencia 2026-II",
+    "institucion": "Pronabec",
+    "nivel": "pregrado",
+    "destino": "peru",
+    "pais": "Perú",
+    "cobertura": "total",
+    "areas": [
+      "Todas las áreas"
+    ],
+    "apertura": "2026-08-03",
+    "cierre": "2026-08-17",
+    "resumen": "Dirigida a estudiantes de universidades públicas que ya cursan una carrera y están en riesgo de abandonarla por motivos económicos.",
+    "requisitos": [
+      "Estar matriculado en una universidad pública elegible",
+      "Haber aprobado al menos dos semestres académicos",
+      "Ubicarse en el tercio superior de tu facultad",
+      "Clasificación socioeconómica de pobreza vigente"
+    ],
+    "beneficios": [
+      "Subvención mensual",
+      "Materiales de estudio",
+      "Acompañamiento académico"
+    ],
+    "enlace": "https://www.pronabec.gob.pe/",
+    "imagen": "https://www.gob.pe/assets/escudo-rojo-200-f4bf73f7.png",
+    "imagenCredito": "Imagen: Plataforma del Estado Peruano (gob.pe)",
+    "fuente": "Pronabec"
+  },
+  {
+    "id": "chevening-2027",
+    "nombre": "Chevening Scholarships 2027-2028",
+    "institucion": "Gobierno del Reino Unido",
+    "nivel": "posgrado",
+    "destino": "extranjero",
+    "pais": "Reino Unido",
+    "cobertura": "total",
+    "areas": [
+      "Todas las áreas"
+    ],
+    "apertura": "2026-08-05",
+    "cierre": "2026-11-03",
+    "resumen": "Maestría de un año en cualquier universidad del Reino Unido, dirigida a profesionales con liderazgo comprobado y vocación de servicio público.",
+    "requisitos": [
+      "Título universitario que permita acceder a una maestría en el Reino Unido",
+      "Al menos dos años de experiencia laboral (2.800 horas)",
+      "Postular a tres programas elegibles en el Reino Unido",
+      "Comprometerse a regresar al país por un mínimo de dos años"
+    ],
+    "beneficios": [
+      "Matrícula completa",
+      "Estipendio mensual",
+      "Pasajes de ida y vuelta",
+      "Visa y seguro médico"
+    ],
+    "enlace": "https://www.chevening.org/",
+    "imagen": null,
+    "imagenCredito": null,
+    "fuente": "Carga manual"
+  },
+  {
+    "id": "continuidad-estudios-2026",
+    "nombre": "Beca Continuidad de Estudios 2026",
+    "institucion": "Pronabec",
+    "nivel": "pregrado",
+    "destino": "peru",
+    "pais": "Perú",
+    "cobertura": "parcial",
+    "areas": [
+      "Todas las áreas"
+    ],
+    "apertura": "2026-08-10",
+    "cierre": "2026-08-31",
+    "resumen": "Para estudiantes de institutos y universidades privadas que interrumpieron sus estudios por motivos económicos y quieren retomarlos.",
+    "requisitos": [
+      "Haber cursado al menos un ciclo en una institución elegible",
+      "Interrupción de estudios no mayor a cuatro años",
+      "Clasificación socioeconómica vigente",
+      "No haber sido beneficiario de otra beca de Pronabec"
+    ],
+    "beneficios": [
+      "Pensión de estudios",
+      "Materiales",
+      "Subvención de conectividad"
+    ],
+    "enlace": "https://www.pronabec.gob.pe/",
+    "imagen": "https://www.gob.pe/assets/escudo-rojo-200-f4bf73f7.png",
+    "imagenCredito": "Imagen: Plataforma del Estado Peruano (gob.pe)",
+    "fuente": "Pronabec"
+  },
+  {
+    "id": "erasmus-mundus-2027",
+    "nombre": "Erasmus Mundus Joint Masters 2027",
+    "institucion": "Comisión Europea",
+    "nivel": "posgrado",
+    "destino": "extranjero",
+    "pais": "Unión Europea",
+    "cobertura": "total",
+    "areas": [
+      "Todas las áreas"
+    ],
+    "apertura": "2026-08-15",
+    "cierre": "2027-01-10",
+    "resumen": "Maestrías conjuntas de dos años dictadas por consorcios de universidades europeas, con movilidad obligatoria entre al menos dos países.",
+    "requisitos": [
+      "Título de pregrado concluido antes del inicio del programa",
+      "Certificado de inglés según lo exija el consorcio",
+      "Postular directamente al consorcio de tu programa de interés",
+      "Cumplir el criterio de movilidad geográfica"
+    ],
+    "beneficios": [
+      "Matrícula completa",
+      "Manutención mensual",
+      "Gastos de viaje e instalación",
+      "Seguro"
+    ],
+    "enlace": "https://erasmus-plus.ec.europa.eu/",
+    "imagen": null,
+    "imagenCredito": null,
+    "fuente": "Carga manual"
+  },
+  {
+    "id": "hijos-docentes-2027",
+    "nombre": "Beca Hijos de Docentes 2027",
+    "institucion": "Pronabec",
+    "nivel": "pregrado",
+    "destino": "peru",
+    "pais": "Perú",
+    "cobertura": "total",
+    "areas": [
+      "Todas las áreas"
+    ],
+    "apertura": "2026-08-17",
+    "cierre": "2026-10-05",
+    "resumen": "Beca integral para hijos de docentes de instituciones educativas públicas que ocuparon los primeros puestos de su promoción escolar.",
+    "requisitos": [
+      "Ser hijo o hija de docente nombrado o contratado del sector público",
+      "Haber ocupado uno de los primeros puestos de la promoción",
+      "Culminar la secundaria en el año indicado en las bases",
+      "Alcanzar vacante en una institución elegible"
+    ],
+    "beneficios": [
+      "Matrícula y pensión",
+      "Manutención",
+      "Materiales de estudio"
+    ],
+    "enlace": "https://www.pronabec.gob.pe/",
+    "imagen": "https://www.gob.pe/assets/escudo-rojo-200-f4bf73f7.png",
+    "imagenCredito": "Imagen: Plataforma del Estado Peruano (gob.pe)",
+    "fuente": "Pronabec"
+  },
+  {
+    "id": "talento-militar-2027",
+    "nombre": "Beca Talento Militar 2027",
+    "institucion": "Pronabec",
+    "nivel": "pregrado",
+    "destino": "peru",
+    "pais": "Perú",
+    "cobertura": "total",
+    "areas": [
+      "Ingeniería y tecnología",
+      "Ciencias básicas",
+      "Ciencias sociales"
+    ],
+    "apertura": "2026-08-24",
+    "cierre": "2026-11-09",
+    "resumen": "Dirigida a licenciados del servicio militar voluntario con buen desempeño que deseen iniciar una carrera profesional o técnica.",
+    "requisitos": [
+      "Haber culminado el servicio militar voluntario",
+      "Contar con la constancia de licenciamiento",
+      "Alcanzar vacante en una institución elegible",
+      "No tener estudios superiores concluidos"
+    ],
+    "beneficios": [
+      "Matrícula y pensión",
+      "Alimentación",
+      "Movilidad",
+      "Materiales"
+    ],
+    "enlace": "https://www.pronabec.gob.pe/",
+    "imagen": "https://www.gob.pe/assets/escudo-rojo-200-f4bf73f7.png",
+    "imagenCredito": "Imagen: Plataforma del Estado Peruano (gob.pe)",
+    "fuente": "Pronabec"
+  },
+  {
+    "id": "oea-alianzas-2027",
+    "nombre": "Becas OEA — Alianzas para la Educación",
+    "institucion": "Organización de los Estados Americanos",
+    "nivel": "posgrado",
+    "destino": "extranjero",
+    "pais": "América",
+    "cobertura": "parcial",
+    "areas": [
+      "Negocios y economía",
+      "Ciencias sociales",
+      "Educación",
+      "Ingeniería y tecnología"
+    ],
+    "apertura": "2026-09-01",
+    "cierre": "2026-11-28",
+    "resumen": "Descuentos y becas parciales en maestrías presenciales y virtuales de universidades aliadas de la OEA en todo el continente.",
+    "requisitos": [
+      "Ser ciudadano o residente permanente de un país miembro de la OEA",
+      "Título de pregrado concluido",
+      "Admisión al programa académico elegido",
+      "Postulación en línea dentro del plazo"
+    ],
+    "beneficios": [
+      "Descuento en matrícula y pensión",
+      "Acceso a red de universidades aliadas"
+    ],
+    "enlace": "https://www.oas.org/es/becas/",
+    "imagen": null,
+    "imagenCredito": null,
+    "fuente": "Carga manual"
+  },
+  {
+    "id": "mext-investigacion-2027",
+    "nombre": "MEXT Japón — Estudiante de investigación",
+    "institucion": "Gobierno de Japón",
+    "nivel": "posgrado",
+    "destino": "extranjero",
+    "pais": "Japón",
+    "cobertura": "total",
+    "areas": [
+      "Ingeniería y tecnología",
+      "Ciencias básicas",
+      "Ciencias agrarias",
+      "Artes y humanidades"
+    ],
+    "apertura": "2026-09-07",
+    "cierre": "2026-10-24",
+    "resumen": "Beca del gobierno japonés para realizar investigación de posgrado en universidades nacionales de Japón, con opción a maestría o doctorado.",
+    "requisitos": [
+      "Menos de 35 años al momento de postular",
+      "Título de pregrado o equivalente",
+      "Promedio académico dentro del rango exigido por la embajada",
+      "Examen escrito de inglés o japonés y entrevista"
+    ],
+    "beneficios": [
+      "Matrícula completa",
+      "Estipendio mensual",
+      "Pasajes",
+      "Curso preparatorio de japonés"
+    ],
+    "enlace": "https://www.pe.emb-japan.go.jp/",
+    "imagen": null,
+    "imagenCredito": null,
+    "fuente": "Carga manual"
+  },
+  {
+    "id": "presidente-republica-2027",
+    "nombre": "Beca Presidente de la República 2027",
+    "institucion": "Pronabec",
+    "nivel": "posgrado",
+    "destino": "extranjero",
+    "pais": "Varios países",
+    "cobertura": "total",
+    "areas": [
+      "Todas las áreas"
+    ],
+    "apertura": "2026-10-01",
+    "cierre": "2026-12-15",
+    "resumen": "Maestrías y doctorados en universidades de prestigio internacional para profesionales peruanos que se comprometan a retornar al país.",
+    "requisitos": [
+      "Grado académico de bachiller o maestro",
+      "Admisión en una universidad elegible del ranking",
+      "Certificado de idioma según el país de destino",
+      "Compromiso de retorno al Perú"
+    ],
+    "beneficios": [
+      "Matrícula",
+      "Manutención",
+      "Pasajes",
+      "Seguro médico",
+      "Instalación"
+    ],
+    "enlace": "https://www.pronabec.gob.pe/",
+    "imagen": "https://www.gob.pe/assets/escudo-rojo-200-f4bf73f7.png",
+    "imagenCredito": "Imagen: Plataforma del Estado Peruano (gob.pe)",
+    "fuente": "Pronabec"
+  },
+  {
+    "id": "eiffel-2027",
+    "nombre": "Becas Eiffel de Excelencia",
+    "institucion": "Ministerio de Europa y Asuntos Exteriores de Francia",
+    "nivel": "posgrado",
+    "destino": "extranjero",
+    "pais": "Francia",
+    "cobertura": "total",
+    "areas": [
+      "Ingeniería y tecnología",
+      "Ciencias básicas",
+      "Negocios y economía",
+      "Ciencias sociales"
+    ],
+    "apertura": "2026-10-20",
+    "cierre": "2027-01-08",
+    "resumen": "Maestrías y doctorados en instituciones francesas de educación superior. La postulación la presenta la institución francesa, no el estudiante.",
+    "requisitos": [
+      "Menos de 25 años para maestría y 30 para doctorado",
+      "Nacionalidad distinta a la francesa",
+      "Ser presentado por la institución francesa que te admite",
+      "Excelencia académica comprobada"
+    ],
+    "beneficios": [
+      "Estipendio mensual",
+      "Pasajes internacionales",
+      "Seguro social",
+      "Actividades culturales"
+    ],
+    "enlace": "https://www.campusfrance.org/",
+    "imagen": null,
+    "imagenCredito": null,
+    "fuente": "Carga manual"
+  },
+  {
+    "id": "vocacion-maestro-2027",
+    "nombre": "Beca Vocación de Maestro 2027",
+    "institucion": "Pronabec",
+    "nivel": "pregrado",
+    "destino": "peru",
+    "pais": "Perú",
+    "cobertura": "total",
+    "areas": [
+      "Educación"
+    ],
+    "apertura": "2026-11-10",
+    "cierre": "2027-01-20",
+    "resumen": "Beca integral para estudiar la carrera de Educación en universidades e institutos pedagógicos elegibles del país.",
+    "requisitos": [
+      "Alto rendimiento escolar comprobado",
+      "Condición socioeconómica elegible",
+      "Alcanzar vacante en una institución con carrera de Educación acreditada",
+      "No contar con estudios superiores concluidos"
+    ],
+    "beneficios": [
+      "Matrícula y pensión",
+      "Alimentación y vivienda",
+      "Materiales",
+      "Movilidad"
+    ],
+    "enlace": "https://www.pronabec.gob.pe/",
+    "imagen": "https://www.gob.pe/assets/escudo-rojo-200-f4bf73f7.png",
+    "imagenCredito": "Imagen: Plataforma del Estado Peruano (gob.pe)",
+    "fuente": "Pronabec"
+  },
+  {
+    "id": "carolina-2027",
+    "nombre": "Becas Fundación Carolina 2027-2028",
+    "institucion": "Fundación Carolina",
+    "nivel": "posgrado",
+    "destino": "extranjero",
+    "pais": "España",
+    "cobertura": "parcial",
+    "areas": [
+      "Ciencias sociales",
+      "Negocios y economía",
+      "Artes y humanidades",
+      "Ciencias de la salud"
+    ],
+    "apertura": "2026-12-01",
+    "cierre": "2027-02-10",
+    "resumen": "Maestrías en universidades españolas para profesionales de América Latina, con cobertura parcial o total según el programa.",
+    "requisitos": [
+      "Nacionalidad de un país de América Latina",
+      "Título de pregrado concluido",
+      "Admisión al programa de maestría elegido",
+      "No haber recibido antes una beca de la Fundación Carolina"
+    ],
+    "beneficios": [
+      "Matrícula parcial o total",
+      "Alojamiento y manutención según modalidad",
+      "Pasajes"
+    ],
+    "enlace": "https://www.fundacioncarolina.es/",
+    "imagen": null,
+    "imagenCredito": null,
+    "fuente": "Carga manual"
+  }
+];
+
+/* Si es true, la web muestra un aviso de que las fechas no están
+   verificadas. Sale de la marca "ejemplo" de data/manual.json. */
+const DATOS_DE_EJEMPLO = true;
+
+/* Última revisión de la fuente menos reciente, en AAAA-MM-DD. */
+const DATOS_ACTUALIZADOS = "2026-08-12";

@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>becaya · Encuentra becas que están abiertas hoy</title>
+<meta name="description" content="Buscador de becas de pregrado y posgrado organizado por fecha: mira qué convocatorias están abiertas hoy, cuáles abren esta semana y cuáles vienen después.">
+<link rel="stylesheet" href="assets/css/styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%237C3AED'/><text y='72' x='50' text-anchor='middle' font-family='Arial' font-weight='bold' font-size='62' fill='white'>b</text></svg>">
+</head>
+<body>
+
+<a class="salta-al-contenido" href="#resultados">Saltar a los resultados</a>
+
+<!-- ============ BARRA SUPERIOR ============ -->
+<header class="cabecera" id="cabecera">
+  <div class="contenedor cabecera__fila">
+    <a class="marca" href="#inicio" aria-label="becaya, inicio">
+      <span class="marca__punto" aria-hidden="true"></span>
+      <span class="marca__texto">beca<span class="marca__acento">ya</span></span>
+    </a>
+
+    <nav class="nav" aria-label="Navegación principal">
+      <a href="#calendario">Calendario</a>
+      <a href="#resultados">Buscar</a>
+      <a href="#voluntariados">Voluntariados</a>
+      <a href="#como-funciona">Cómo funciona</a>
+    </nav>
+
+    <button class="btn btn--fantasma btn--guardadas" id="btnGuardadas" aria-label="Ver mis becas guardadas">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4.5L5 21V4a1 1 0 0 1 1-1z"/></svg>
+      Guardadas
+      <span class="pastilla-conteo" id="conteoGuardadas">0</span>
+    </button>
+  </div>
+</header>
+
+<main id="inicio">
+
+  <!-- ============ PORTADA ============ -->
+  <section class="portada">
+    <div class="contenedor portada__caja">
+
+      <p class="antetitulo revelar">Pregrado y posgrado · Perú y el mundo</p>
+
+      <h1 class="portada__titulo revelar" style="--retraso:.06s">
+        Deja de buscar becas<br>
+        <span class="subrayado-morado">vencidas</span>.
+      </h1>
+
+      <p class="portada__bajada revelar" style="--retraso:.12s">
+        Aquí las convocatorias se ordenan por fecha, no por popularidad. Mira lo que
+        está abierto hoy, lo que abre la próxima semana y lo que viene después.
+      </p>
+
+      <!-- Elemento firma: el reloj de convocatorias -->
+      <div class="reloj revelar" style="--retraso:.18s" id="reloj">
+        <button class="reloj__bloque reloj__bloque--vivo" data-salto="abiertas">
+          <span class="reloj__numero" data-contador="0">0</span>
+          <span class="reloj__etiqueta">abiertas hoy</span>
+          <span class="reloj__pulso" aria-hidden="true"></span>
+        </button>
+        <button class="reloj__bloque" data-salto="cierran-pronto">
+          <span class="reloj__numero" data-contador="0">0</span>
+          <span class="reloj__etiqueta">cierran en 7 días</span>
+        </button>
+        <button class="reloj__bloque" data-salto="esta-semana">
+          <span class="reloj__numero" data-contador="0">0</span>
+          <span class="reloj__etiqueta">abren esta semana</span>
+        </button>
+        <button class="reloj__bloque" data-salto="este-mes">
+          <span class="reloj__numero" data-contador="0">0</span>
+          <span class="reloj__etiqueta">abren este mes</span>
+        </button>
+      </div>
+
+      <p class="portada__fecha revelar" style="--retraso:.24s">
+        Datos al <span id="fechaHoy"></span>
+      </p>
+    </div>
+
+    <div class="portada__resplandor" aria-hidden="true"></div>
+  </section>
+
+  <!-- ============ BUSCADOR + FILTROS ============ -->
+  <section class="buscador" id="resultados">
+    <div class="contenedor">
+
+      <div class="barra-busqueda">
+        <svg class="barra-busqueda__icono" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"/><path d="M20 20l-4.5-4.5"/>
+        </svg>
+        <input
+          type="search"
+          id="campoBusqueda"
+          class="barra-busqueda__campo"
+          placeholder="Busca por nombre, país, universidad o carrera"
+          autocomplete="off"
+          aria-label="Buscar becas">
+        <button class="barra-busqueda__limpiar" id="limpiarBusqueda" aria-label="Limpiar búsqueda" hidden>&times;</button>
+      </div>
+
+      <div class="filtros" id="filtrosBecas" role="group" aria-label="Filtros de becas">
+
+        <div class="filtro">
+          <span class="filtro__titulo">Nivel</span>
+          <div class="filtro__opciones" data-filtro="nivel">
+            <button class="ficha ficha--activa" data-valor="todos">Todos</button>
+            <button class="ficha" data-valor="pregrado">Pregrado</button>
+            <button class="ficha" data-valor="posgrado">Posgrado</button>
+          </div>
+        </div>
+
+        <div class="filtro">
+          <span class="filtro__titulo">Destino</span>
+          <div class="filtro__opciones" data-filtro="destino">
+            <button class="ficha ficha--activa" data-valor="todos">Todos</button>
+            <button class="ficha" data-valor="peru">Perú</button>
+            <button class="ficha" data-valor="extranjero">Extranjero</button>
+          </div>
+        </div>
+
+        <div class="filtro">
+          <span class="filtro__titulo">Cobertura</span>
+          <div class="filtro__opciones" data-filtro="cobertura">
+            <button class="ficha ficha--activa" data-valor="todos">Todas</button>
+            <button class="ficha" data-valor="total">Total</button>
+            <button class="ficha" data-valor="parcial">Parcial</button>
+          </div>
+        </div>
+
+        <div class="filtro filtro--crece">
+          <span class="filtro__titulo">Área de estudio</span>
+          <div class="filtro__opciones" data-filtro="area" id="filtroAreas"></div>
+        </div>
+
+      </div>
+
+      <div class="barra-estado">
+        <p class="barra-estado__conteo" id="conteoResultados" aria-live="polite">Cargando convocatorias…</p>
+
+        <div class="barra-estado__acciones">
+          <button class="enlace-limpio" id="limpiarFiltros" hidden>Quitar filtros</button>
+
+          <div class="conmutador" role="tablist" aria-label="Forma de ver los resultados">
+            <button class="conmutador__btn conmutador__btn--activo" data-vista="calendario" role="tab" aria-selected="true">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+              Calendario
+            </button>
+            <button class="conmutador__btn" data-vista="lista" role="tab" aria-selected="false">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="7" height="7" rx="1.5"/><rect x="14" y="4" width="7" height="7" rx="1.5"/><rect x="3" y="15" width="7" height="7" rx="1.5"/><rect x="14" y="15" width="7" height="7" rx="1.5"/></svg>
+              Cuadrícula
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ RESULTADOS ============ -->
+  <section class="resultados" id="calendario">
+    <div class="contenedor">
+      <div id="zonaResultados"></div>
+
+      <div class="vacio" id="sinResultados" hidden>
+        <div class="vacio__marca" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.5-4.5"/></svg>
+        </div>
+        <h3>Ninguna convocatoria coincide</h3>
+        <p>Prueba con menos filtros o busca por el nombre de la institución.</p>
+        <button class="btn btn--principal" id="reiniciarBusqueda">Ver todas las becas</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ VOLUNTARIADOS ============
+       Sección aparte a propósito: otro catálogo, otro buscador, otros
+       filtros y otras guardadas. No se mezcla con las becas en ningún
+       punto de la interfaz ni de los datos. -->
+  <section class="voluntariados" id="voluntariados">
+    <div class="contenedor">
+
+      <p class="antetitulo">No es una beca, es otra forma de sumar</p>
+      <h2 class="voluntariados__titulo">Oportunidades de voluntariado</h2>
+      <p class="voluntariados__bajada">
+        Programas con organizaciones verificadas. No implican estudios ni dinero de por
+        medio: aquí se suma experiencia, no un cupo académico.
+      </p>
+
+      <div class="barra-busqueda barra-busqueda--vol">
+        <svg class="barra-busqueda__icono" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"/><path d="M20 20l-4.5-4.5"/>
+        </svg>
+        <input
+          type="search"
+          id="campoBusquedaVol"
+          class="barra-busqueda__campo"
+          placeholder="Busca por nombre, organización o tema"
+          autocomplete="off"
+          aria-label="Buscar voluntariados">
+        <button class="barra-busqueda__limpiar" id="limpiarBusquedaVol" aria-label="Limpiar búsqueda" hidden>&times;</button>
+      </div>
+
+      <div class="filtros" id="filtrosVol" role="group" aria-label="Filtros de voluntariados">
+        <div class="filtro">
+          <span class="filtro__titulo">Modalidad</span>
+          <div class="filtro__opciones" data-filtro-vol="modalidad">
+            <button class="ficha ficha--activa" data-valor="todos">Todas</button>
+            <button class="ficha" data-valor="presencial">Presencial</button>
+            <button class="ficha" data-valor="virtual">Virtual</button>
+            <button class="ficha" data-valor="hibrida">Híbrida</button>
+          </div>
+        </div>
+
+        <div class="filtro filtro--crece">
+          <span class="filtro__titulo">Área</span>
+          <div class="filtro__opciones" data-filtro-vol="area" id="filtroAreasVol"></div>
+        </div>
+      </div>
+
+      <div class="barra-estado">
+        <p class="barra-estado__conteo" id="conteoResultadosVol" aria-live="polite">Cargando voluntariados…</p>
+        <div class="barra-estado__acciones">
+          <span class="pastilla-conteo pastilla-conteo--vol" id="conteoGuardadosVol" title="Voluntariados guardados" hidden>0 guardados</span>
+          <button class="enlace-limpio" id="limpiarFiltrosVol" hidden>Quitar filtros</button>
+        </div>
+      </div>
+
+      <div id="zonaVoluntariados"></div>
+
+      <div class="vacio" id="sinResultadosVol" hidden>
+        <div class="vacio__marca" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.5-4.5"/></svg>
+        </div>
+        <h3>Ningún voluntariado coincide</h3>
+        <p>Prueba con menos filtros o busca por el nombre de la organización.</p>
+        <button class="btn btn--principal" id="reiniciarBusquedaVol">Ver todos los voluntariados</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ CÓMO FUNCIONA ============ -->
+  <section class="explicacion" id="como-funciona">
+    <div class="contenedor">
+      <p class="antetitulo">Cómo se arma este calendario</p>
+      <h2 class="explicacion__titulo">Tres fuentes, una sola fecha de verdad.</h2>
+
+      <ol class="pasos">
+        <li class="paso revelar">
+          <span class="paso__num">01</span>
+          <h3>Se leen las fuentes oficiales</h3>
+          <p>La API de datos abiertos de Pronabec entrega las convocatorias vigentes del Estado peruano. Las becas internacionales se cargan y revisan a mano desde la web de cada institución.</p>
+        </li>
+        <li class="paso revelar" style="--retraso:.08s">
+          <span class="paso__num">02</span>
+          <h3>Cada beca guarda dos fechas</h3>
+          <p>Apertura y cierre. Sin esas dos fechas una convocatoria no entra al calendario, porque sin ellas no se puede saber si sigue viva.</p>
+        </li>
+        <li class="paso revelar" style="--retraso:.16s">
+          <span class="paso__num">03</span>
+          <h3>El estado se calcula solo</h3>
+          <p>Al cargar la página se comparan esas fechas con el día de hoy. De ahí salen los grupos: abierta ahora, abre esta semana, abre este mes, cerrada.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ PIE ============ -->
+<footer class="pie">
+  <div class="contenedor pie__fila">
+    <div>
+      <span class="marca marca--pie">
+        <span class="marca__punto" aria-hidden="true"></span>
+        <span class="marca__texto">beca<span class="marca__acento">ya</span></span>
+      </span>
+      <p class="pie__nota">Proyecto de demostración. Las fechas mostradas son de ejemplo: verifica siempre en la web oficial de cada institución antes de postular.</p>
+      <p class="pie__derechos">© <span id="anioActual"></span> becaya. Todos los derechos reservados.</p>
+    </div>
+    <div class="pie__enlaces">
+      <a href="https://datosabiertos.pronabec.gob.pe/developer/Api" target="_blank" rel="noopener">API de Pronabec</a>
+      <a href="https://www.pronabec.gob.pe" target="_blank" rel="noopener">Pronabec</a>
+      <a href="#inicio">Volver arriba</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ PANEL DE DETALLE ============ -->
+<div class="fondo-modal" id="fondoModal" hidden></div>
+<aside class="panel" id="panelDetalle" role="dialog" aria-modal="true" aria-labelledby="panelTitulo" hidden>
+  <button class="panel__cerrar" id="cerrarPanel" aria-label="Cerrar detalle">&times;</button>
+  <div class="panel__cuerpo" id="panelCuerpo"></div>
+</aside>
+
+<!-- ============ AVISO FLOTANTE ============ -->
+<div class="aviso" id="aviso" role="status" aria-live="polite"></div>
+
+<script src="assets/js/datos.js"></script>
+<script src="assets/js/voluntariados.js"></script>
+<script src="assets/js/estado.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

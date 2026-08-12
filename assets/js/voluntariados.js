@@ -7,7 +7,7 @@
 
      node scripts/construir-datos.mjs
 
-   Generado el 2026-08-12T22:17:34.710Z.
+   Generado el 2026-08-12T22:29:37.142Z.
    ============================================================ */
 
 const VOLUNTARIADOS = [];

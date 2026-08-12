@@ -1,217 +1,170 @@
 /* ============================================================
-   sync-pronabec.mjs   ⚠  HOY NO FUNCIONA — LEER ANTES DE USAR
+   sync-pronabec.mjs — histórico oficial de convocatorias
    ------------------------------------------------------------
-   Comprobado el 2026-08-12:
-
-   1. El host que indica la documentación oficial de Pronabec,
-      api.datosabiertos.pronabec.gob.pe, NO EXISTE en DNS. Devuelve
-      NXDOMAIN tanto desde un DNS doméstico como desde 8.8.8.8. Todos
-      los ejemplos de su documentación apuntan ahí, así que la clave
-      de API no sirve de nada: no hay servidor al que pedírsela.
-
-   2. Los endpoints internos del portal SÍ responden y no piden clave:
-        https://datosabiertos.pronabec.gob.pe/Dataset/ListarConvocatorias
-      Pero sus 403 convocatorias se detienen en DICIEMBRE DE 2021, y el
-      dataset "ConvocatoriaCarreraVigentes" devuelve una lista vacía.
-
-   Conclusión: no hay fuente automática de convocatorias vigentes. Para
-   mantener el catálogo al día usa scripts/vigilar-pronabec.mjs, que
-   vigila la web de Pronabec (esa sí está viva) y avisa cuando algo
-   cambia para que una persona lo confirme.
-
-   Este archivo se conserva por si Pronabec revive su API. Si eso pasa,
-   corrige API y RECURSO abajo: el nombre real del recurso es
-   "Convocatorias" o "ConvocatoriaCarreraVigentes", no el que había aquí.
-   ------------------------------------------------------------
-   Trae las convocatorias desde la API de datos abiertos de
-   Pronabec y las deja en data/pronabec.json.
+   Trae las convocatorias del portal de datos abiertos de Pronabec
+   y las deja en data/pronabec.json. Luego llama a construir-datos.mjs,
+   que las une con data/manual.json SIN pisarlo.
 
    Uso:
-     PRONABEC_API_KEY=tu_clave node scripts/sync-pronabec.mjs
+     node scripts/sync-pronabec.mjs
 
-   Genera:
-     data/pronabec-crudo.json   respuesta tal como llega, para depurar
-     data/pronabec.json         convocatorias normalizadas
+   No hace falta clave de API.
 
-   Y luego llama a construir-datos.mjs, que une esto con
-   data/manual.json y reescribe assets/js/datos.js.
+   ------------------------------------------------------------
+   QUÉ TRAE Y QUÉ NO  (comprobado el 2026-08-12)
+   ------------------------------------------------------------
+   Trae 403 convocatorias oficiales de Pronabec, de pregrado y de
+   posgrado, con fechas EXACTAS de inicio y fin de inscripción. No son
+   estimaciones ni texto interpretado: vienen como campos de su propia
+   base de datos.
 
-   IMPORTANTE: este script NO toca data/manual.json. Las becas
-   internacionales cargadas a mano sobreviven a cada sincronización.
+   PERO todas son de 2012 a 2021. El portal de datos abiertos dejó de
+   actualizarse en diciembre de 2021, y su dataset de convocatorias
+   vigentes ("ConvocatoriaCarreraVigentes") devuelve una lista vacía.
 
-   Consigue tu clave gratis en:
-     https://datosabiertos.pronabec.gob.pe/developer/Api
+   Por eso lo que este script importa aparece SIEMPRE en el grupo
+   "Ya cerradas" de la web. Sirve para ver en qué mes suele abrir cada
+   beca, no para saber qué está abierto hoy. Para eso está
+   scripts/vigilar-pronabec.mjs, que vigila la web viva de Pronabec.
 
-   ANTES DEL PRIMER USO: el nombre del recurso (RECURSO) tiene que
-   coincidir con el "Apiguid" de la documentación oficial. Revisa
-   https://datosabiertos.pronabec.gob.pe/developer/data y ajusta la
-   constante de abajo. Lo mismo con los nombres de campo dentro de
-   normalizar(): la API los publica en español y varían entre datasets.
+   ------------------------------------------------------------
+   POR QUÉ NO SE USA LA API DOCUMENTADA
+   ------------------------------------------------------------
+   La documentación oficial manda a api.datosabiertos.pronabec.gob.pe,
+   un host que NO EXISTE en DNS (NXDOMAIN desde un DNS doméstico y
+   desde 8.8.8.8). Pedir una clave de API es inútil: no hay servidor al
+   que presentarla. Los endpoints internos del portal, en cambio,
+   responden y no piden autenticación. Son los que se usan aquí.
    ============================================================ */
 
 import { writeFile, mkdir } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { construir, enlaceSeguro } from "./construir-datos.mjs";
+import { construir } from "./construir-datos.mjs";
 
 const RAIZ = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
-const API = "https://api.datosabiertos.pronabec.gob.pe/developer";
-const RECURSO = "ConvocatoriasVigentes";
-const CLAVE = process.env.PRONABEC_API_KEY;
+const PORTAL = "https://datosabiertos.pronabec.gob.pe";
+const LISTADO = `${PORTAL}/Dataset/ListarConvocatorias`;
+const FICHA = `${PORTAL}/dataset/Convocatorias`;
+const UA = "Mozilla/5.0 (compatible; becaya-bot/1.0; importa datos abiertos publicos)";
+const ESPERA_MS = 45000;
 
-const MAX_PAGINAS = 100;
-const ESPERA_MS = 20000;
+/* El listado llega en formato jqGrid: filas con celdas POSICIONALES, sin
+   nombre. Si Pronabec reordena las columnas, los datos saldrían mal en
+   silencio, así que se comprueba la forma antes de confiar en ella. */
+const COL = {
+  id: 1, codigo: 2, descripcion: 3, modalidad: 4, programa: 5,
+  ofertadas: 6, iniInscripcion: 9, finInscripcion: 10
+};
+const COLUMNAS_ESPERADAS = 19;
 
-if (!CLAVE) {
-  console.error("Falta la clave. Ejecuta: PRONABEC_API_KEY=tu_clave node scripts/sync-pronabec.mjs");
-  process.exit(1);
-}
+async function descargar() {
+  const cuerpo = new URLSearchParams({ page: "1", rows: "5000", sidx: "", sord: "asc" });
+  const r = await fetch(LISTADO, {
+    method: "POST",
+    headers: {
+      "User-Agent": UA,
+      "X-Requested-With": "XMLHttpRequest",
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
+    body: cuerpo,
+    signal: AbortSignal.timeout(ESPERA_MS)
+  });
+  if (!r.ok) throw new Error(`El portal respondió ${r.status}`);
 
-/* La clave viaja en la URL, así que nunca imprimimos la URL completa. */
-function sinClave(texto) {
-  return String(texto).replaceAll(CLAVE, "***");
-}
+  const datos = await r.json();
+  if (!Array.isArray(datos.rows)) throw new Error("La respuesta no trae filas");
+  if (datos.rows.length === 0) throw new Error("El portal devolvió cero convocatorias");
 
-/* ---------- Descarga con paginado ---------- */
-
-/* El corte del paginado no asume un tamaño de página fijo: la API
-   podría devolver 10, 50 o 500 por página. Se detiene cuando llega
-   una página vacía, cuando devuelve menos registros que la primera,
-   o cuando deja de aportar ids nuevos (defensa contra una API que
-   ignora el parámetro `page` y repite la primera página para siempre). */
-async function descargarTodo() {
-  const filas = [];
-  const vistos = new Set();
-  let tamañoPagina = null;
-
-  for (let pagina = 1; pagina <= MAX_PAGINAS; pagina++) {
-    const url = `${API}/${RECURSO}?apiKey=${encodeURIComponent(CLAVE)}&page=${pagina}`;
-
-    let respuesta;
-    try {
-      respuesta = await fetch(url, { signal: AbortSignal.timeout(ESPERA_MS) });
-    } catch (error) {
-      throw new Error(`No se pudo conectar en la página ${pagina}: ${sinClave(error.message)}`);
-    }
-
-    if (!respuesta.ok) {
-      throw new Error(`La API respondió ${respuesta.status} en la página ${pagina}`);
-    }
-
-    let cuerpo;
-    try {
-      cuerpo = await respuesta.json();
-    } catch {
-      throw new Error(`La página ${pagina} no devolvió JSON válido (¿la clave es correcta?)`);
-    }
-
-    const lote = Array.isArray(cuerpo) ? cuerpo : (cuerpo.results || cuerpo.data || cuerpo.items || []);
-    if (!Array.isArray(lote) || lote.length === 0) break;
-
-    /* Registros que no habíamos visto en páginas anteriores. */
-    const nuevos = lote.filter((fila) => {
-      const huella = JSON.stringify(fila);
-      if (vistos.has(huella)) return false;
-      vistos.add(huella);
-      return true;
-    });
-
-    if (nuevos.length === 0) {
-      console.warn(`Página ${pagina} repite registros anteriores: se corta el paginado aquí.`);
-      break;
-    }
-
-    filas.push(...nuevos);
-    console.log(`Página ${pagina}: ${nuevos.length} registros nuevos`);
-
-    if (tamañoPagina === null) tamañoPagina = lote.length;
-    if (lote.length < tamañoPagina) break;
+  const ancho = datos.rows[0].cell?.length;
+  if (ancho !== COLUMNAS_ESPERADAS) {
+    throw new Error(
+      `El listado cambió de forma: ${ancho} columnas en vez de ${COLUMNAS_ESPERADAS}. ` +
+      `Revisa ${FICHA} y corrige el mapa COL antes de volver a importar.`
+    );
   }
-
-  return filas;
+  if (datos.records && datos.rows.length < datos.records) {
+    console.warn(`Aviso: el portal dice tener ${datos.records} y envió ${datos.rows.length}.`);
+  }
+  return datos.rows.map((f) => f.cell);
 }
 
-/* ---------- Normalización ---------- */
-
-/* Convierte cualquier formato de fecha razonable a AAAA-MM-DD. */
+/* "25/11/2012" -> "2012-11-25". Formato peruano: día primero. */
 function aISO(valor) {
-  if (!valor) return null;
-  const texto = String(valor).trim();
-
-  const iso = texto.match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if (iso) return `${iso[1]}-${iso[2]}-${iso[3]}`;
-
-  /* Formato peruano: día primero. */
-  const latino = texto.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
-  if (latino) {
-    const d = latino[1].padStart(2, "0");
-    const m = latino[2].padStart(2, "0");
-    return `${latino[3]}-${m}-${d}`;
-  }
-
-  /* Último recurso. Se arma con los componentes locales, no con
-     toISOString(), que en Perú (UTC-5) puede correr la fecha un día. */
-  const fecha = new Date(texto);
-  if (isNaN(fecha.getTime())) return null;
-  const mes = String(fecha.getMonth() + 1).padStart(2, "0");
-  const dia = String(fecha.getDate()).padStart(2, "0");
-  return `${fecha.getFullYear()}-${mes}-${dia}`;
+  const m = String(valor ?? "").match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if (!m) return null;
+  const [, d, mes, a] = m;
+  const iso = `${a}-${mes.padStart(2, "0")}-${d.padStart(2, "0")}`;
+  const prueba = new Date(Number(a), Number(mes) - 1, Number(d));
+  return prueba.getFullYear() === Number(a) && prueba.getMonth() === Number(mes) - 1
+    ? iso : null;
 }
 
-function deducirNivel(texto = "") {
+/* El nivel sale del nombre del programa y de la modalidad, que es lo
+   que Pronabec usa para distinguirlos. Ante la duda, pregrado: Beca 18
+   y sus variantes son la mayor parte del histórico. */
+function deducirNivel(texto) {
   const t = texto.toLowerCase();
-  if (/maestr|doctor|posgrad|postgrad|especializ/.test(t)) return "posgrado";
+  if (/postgrado|posgrado|maestr|doctor|especializ|docente/.test(t)) return "posgrado";
   return "pregrado";
 }
 
-function aBabosa(texto) {
-  return String(texto)
-    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+function deducirDestino(texto) {
+  return /extranjero|internacional|exterior/i.test(texto) ? "extranjero" : "peru";
 }
 
-function normalizar(fila) {
-  const nombre = fila.NombreConvocatoria || fila.Convocatoria || fila.Nombre || "Convocatoria sin nombre";
+function babosa(texto) {
+  return String(texto)
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60);
+}
+
+function normalizar(cel, verificadaEl) {
+  const nombre = String(cel[COL.descripcion] || "").trim();
+  const modalidad = String(cel[COL.modalidad] || "").trim();
+  const programa = String(cel[COL.programa] || "").trim();
+  const codigo = String(cel[COL.codigo] || "").trim();
+  const contexto = `${nombre} ${modalidad} ${programa}`;
+
+  const apertura = aISO(cel[COL.iniInscripcion]);
+  const cierre = aISO(cel[COL.finInscripcion]);
+  const ofertadas = Number(cel[COL.ofertadas]);
 
   return {
-    id: "pronabec-" + aBabosa(fila.IdConvocatoria || fila.Id || nombre),
-    nombre,
+    id: "pronabec-" + babosa(`${codigo}-${cel[COL.id]}-${nombre}`),
+    nombre: codigo && !nombre.includes(codigo) ? `${nombre} (${codigo})` : nombre,
     institucion: "Pronabec",
-    nivel: deducirNivel(nombre + " " + (fila.Modalidad || "")),
-    destino: "peru",
-    pais: "Perú",
-    cobertura: "total",
-    areas: fila.Carrera ? [fila.Carrera] : ["Todas las áreas"],
-    apertura: aISO(fila.FechaInicio || fila.FechaApertura),
-    cierre: aISO(fila.FechaFin || fila.FechaCierre),
-    resumen: fila.Descripcion || `Convocatoria de Pronabec${fila.Sede ? " — sede " + fila.Sede : ""}.`,
+    nivel: deducirNivel(contexto),
+    destino: deducirDestino(contexto),
+    pais: deducirDestino(contexto) === "peru" ? "Perú" : "Varios países",
+    /* El dataset no publica la cobertura, y suponerla sería inventar. */
+    cobertura: "parcial",
+    areas: programa ? [programa] : ["Todas las áreas"],
+    apertura,
+    cierre,
+    resumen: [
+      modalidad && modalidad !== nombre ? modalidad + "." : "",
+      Number.isFinite(ofertadas) && ofertadas > 0 ? `${ofertadas} becas ofertadas.` : "",
+      "Convocatoria histórica del registro de datos abiertos de Pronabec."
+    ].filter(Boolean).join(" "),
     requisitos: [],
     beneficios: [],
-    enlace: enlaceSeguro(fila.Enlace) || "https://www.pronabec.gob.pe/",
-    fuente: "Pronabec"
+    enlace: "https://www.pronabec.gob.pe/concursos-becas-creditos/",
+    fuente: "Pronabec (datos abiertos)",
+    verificadaEl,
+    notaVerificacion:
+      `Importada de ${LISTADO} el ${verificadaEl}. Fechas exactas de inicio y fin de ` +
+      `inscripción tomadas del registro oficial, sin interpretar texto. Convocatoria ` +
+      `histórica: el portal no se actualiza desde diciembre de 2021.`
   };
 }
 
-/* Sin las dos fechas la beca no puede entrar al calendario. */
-function tieneFechas(beca) {
-  return Boolean(beca.apertura && beca.cierre);
+function hoyISO() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
-/* Dos convocatorias con el mismo id romperían los favoritos del
-   usuario, que se guardan justamente por id. Gana la primera. */
-function sinRepetidos(becas) {
-  const porId = new Map();
-  let repetidos = 0;
-  for (const beca of becas) {
-    if (porId.has(beca.id)) { repetidos++; continue; }
-    porId.set(beca.id, beca);
-  }
-  if (repetidos > 0) console.warn(`${repetidos} convocatorias con id repetido quedaron fuera.`);
-  return Array.from(porId.values());
-}
-
-/* ---------- Escritura ---------- */
 async function guardar(ruta, contenido) {
   const destino = resolve(RAIZ, ruta);
   await mkdir(dirname(destino), { recursive: true });
@@ -219,45 +172,59 @@ async function guardar(ruta, contenido) {
   console.log("Escrito: " + ruta);
 }
 
-function hoyISO() {
-  const d = new Date();
-  const mes = String(d.getMonth() + 1).padStart(2, "0");
-  const dia = String(d.getDate()).padStart(2, "0");
-  return `${d.getFullYear()}-${mes}-${dia}`;
-}
-
 async function principal() {
-  console.log("Consultando la API de Pronabec…");
-  const crudo = await descargarTodo();
-  console.log(`Total de registros recibidos: ${crudo.length}`);
+  console.log("Descargando el histórico de convocatorias de Pronabec…");
+  const filas = await descargar();
+  console.log(`${filas.length} registros recibidos.`);
 
-  if (crudo.length === 0) {
-    throw new Error("La API no devolvió ningún registro. Revisa el nombre del recurso antes de continuar; " +
-      "no se sobrescribe nada para no vaciar el catálogo por un error de configuración.");
+  const hoy = hoyISO();
+  const todas = filas.map((f) => normalizar(f, hoy));
+
+  /* Sin ninguna fecha no hay nada verificable que mostrar. */
+  const conFecha = todas.filter((b) => b.apertura || b.cierre);
+  const sinFecha = todas.length - conFecha.length;
+
+  /* Un id repetido rompería los favoritos del usuario. Gana el primero. */
+  const porId = new Map();
+  let repetidos = 0;
+  for (const b of conFecha) {
+    if (porId.has(b.id)) { repetidos++; continue; }
+    porId.set(b.id, b);
+  }
+  const becas = [...porId.values()];
+
+  if (sinFecha) console.warn(`${sinFecha} sin fecha de inscripción: fuera.`);
+  if (repetidos) console.warn(`${repetidos} con id repetido: fuera.`);
+
+  const cierres = becas.map((b) => b.cierre).filter(Boolean).sort();
+  const masReciente = cierres[cierres.length - 1];
+  const vigentes = becas.filter((b) => !b.cierre || b.cierre >= hoy).length;
+
+  console.log(`\n${becas.length} convocatorias listas.`);
+  console.log(`Cierre más reciente del histórico: ${masReciente}`);
+  if (vigentes === 0) {
+    console.log(
+      "\nNinguna sigue vigente: todas entrarán en el grupo \"Ya cerradas\".\n" +
+      "Es lo esperado — el portal de datos abiertos no se actualiza desde 2021.\n" +
+      "Para las convocatorias vigentes usa: node scripts/vigilar-pronabec.mjs"
+    );
   }
 
-  const normalizadas = sinRepetidos(crudo.map(normalizar));
-  const utiles = normalizadas.filter(tieneFechas);
-  const descartadas = normalizadas.length - utiles.length;
-
-  if (descartadas > 0) {
-    console.warn(`${descartadas} convocatorias quedaron fuera por no traer fecha de apertura y cierre.`);
-  }
-
-  await guardar("data/pronabec-crudo.json", JSON.stringify(crudo, null, 2) + "\n");
   await guardar("data/pronabec.json", JSON.stringify({
-    _comentario: "GENERADO por scripts/sync-pronabec.mjs. No editar a mano: se sobrescribe en cada sincronización.",
-    actualizado: hoyISO(),
+    _comentario:
+      "GENERADO por scripts/sync-pronabec.mjs desde el portal de datos abiertos de Pronabec. " +
+      "No editar a mano: se sobrescribe en cada importación. Histórico 2012-2021; el portal " +
+      "no publica convocatorias vigentes.",
+    actualizado: hoy,
     ejemplo: false,
-    becas: utiles
+    becas
   }, null, 2) + "\n");
 
-  console.log(`${utiles.length} convocatorias de Pronabec con fechas completas.`);
   console.log("\nUniendo con las becas cargadas a mano…");
   await construir();
 }
 
 principal().catch((error) => {
-  console.error("Falló la sincronización:", sinClave(error.message));
+  console.error("Falló la importación:", error.message);
   process.exit(1);
 });

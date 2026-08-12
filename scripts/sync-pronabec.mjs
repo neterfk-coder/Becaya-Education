@@ -44,6 +44,25 @@ import { construir } from "./construir-datos.mjs";
 
 const RAIZ = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
+/* ------------------------------------------------------------
+   Antigüedad máxima que se publica.
+   ------------------------------------------------------------
+   Solo entran al catálogo las convocatorias de este año en adelante.
+   Una convocatoria de hace diez años no ayuda a nadie a postular y
+   ensucia la búsqueda; el valor de las cerradas es servir de
+   referencia reciente ("¿en qué mes suele abrir esta beca?").
+
+   OJO: el portal de datos abiertos de Pronabec dejó de actualizarse en
+   diciembre de 2021. Con el corte en 2025 no entra ninguna. Estos son
+   los tamaños según dónde se ponga:
+
+       2025 → 0     2021 → 13    2020 → 39
+       2019 → 61    2018 → 82    2012 → 290 (todas)
+
+   Cámbialo aquí y vuelve a correr el script.
+   ------------------------------------------------------------ */
+const DESDE_ANIO = 2025;
+
 const PORTAL = "https://datosabiertos.pronabec.gob.pe";
 const LISTADO = `${PORTAL}/Dataset/ListarConvocatorias`;
 const FICHA = `${PORTAL}/dataset/Convocatorias`;
@@ -184,10 +203,18 @@ async function principal() {
   const conFecha = todas.filter((b) => b.apertura || b.cierre);
   const sinFecha = todas.length - conFecha.length;
 
+  /* Corte por antigüedad: se mira el cierre, y si no lo hay, la apertura. */
+  const recientes = conFecha.filter((b) => {
+    const anio = Number((b.cierre || b.apertura).slice(0, 4));
+    return anio >= DESDE_ANIO;
+  });
+  const viejas = conFecha.length - recientes.length;
+  if (viejas) console.warn(`${viejas} anteriores a ${DESDE_ANIO}: fuera.`);
+
   /* Un id repetido rompería los favoritos del usuario. Gana el primero. */
   const porId = new Map();
   let repetidos = 0;
-  for (const b of conFecha) {
+  for (const b of recientes) {
     if (porId.has(b.id)) { repetidos++; continue; }
     porId.set(b.id, b);
   }
@@ -196,18 +223,29 @@ async function principal() {
   if (sinFecha) console.warn(`${sinFecha} sin fecha de inscripción: fuera.`);
   if (repetidos) console.warn(`${repetidos} con id repetido: fuera.`);
 
-  const cierres = becas.map((b) => b.cierre).filter(Boolean).sort();
-  const masReciente = cierres[cierres.length - 1];
-  const vigentes = becas.filter((b) => !b.cierre || b.cierre >= hoy).length;
+  console.log(`\n${becas.length} convocatorias listas (corte: ${DESDE_ANIO} en adelante).`);
 
-  console.log(`\n${becas.length} convocatorias listas.`);
-  console.log(`Cierre más reciente del histórico: ${masReciente}`);
-  if (vigentes === 0) {
+  if (becas.length === 0) {
+    /* Caso real y esperable: el portal se congeló en 2021, así que
+       cualquier corte posterior lo deja vacío. No es un error. */
+    const disponible = conFecha
+      .map((b) => (b.cierre || b.apertura).slice(0, 4))
+      .sort().reverse()[0];
     console.log(
-      "\nNinguna sigue vigente: todas entrarán en el grupo \"Ya cerradas\".\n" +
-      "Es lo esperado — el portal de datos abiertos no se actualiza desde 2021.\n" +
-      "Para las convocatorias vigentes usa: node scripts/vigilar-pronabec.mjs"
+      `\nEl corte deja el histórico vacío: lo más nuevo del portal es de ${disponible}.\n` +
+      `Si quieres algo de referencia, baja DESDE_ANIO en este script.\n` +
+      `Las convocatorias vigentes no salen de aquí: están en data/manual.json.`
     );
+  } else {
+    const cierres = becas.map((b) => b.cierre).filter(Boolean).sort();
+    console.log(`Cierre más reciente: ${cierres[cierres.length - 1]}`);
+    const vigentes = becas.filter((b) => !b.cierre || b.cierre >= hoy).length;
+    if (vigentes === 0) {
+      console.log(
+        "\nNinguna sigue vigente: todas entrarán en el grupo \"Ya cerradas\".\n" +
+        "Para las convocatorias vigentes usa: node scripts/vigilar-pronabec.mjs"
+      );
+    }
   }
 
   await guardar("data/pronabec.json", JSON.stringify({

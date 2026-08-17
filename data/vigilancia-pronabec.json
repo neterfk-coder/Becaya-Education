@@ -1,6 +1,6 @@
 {
   "_comentario": "GENERADO por scripts/vigilar-pronabec.mjs. Huella del contenido de cada página de concurso, para detectar cambios. No editar a mano.",
-  "revisadoEl": "2026-08-12",
+  "revisadoEl": "2026-08-17",
   "paginas": {
     "beca-18": {
       "huella": "e9f0773e1e4850b9",
@@ -35,7 +35,7 @@
       "cierre": null
     },
     "beca-peru": {
-      "huella": "fa160b0108aa1d7f",
+      "huella": "8ce7553203cf075e",
       "cierre": null
     },
     "beca-productiva": {

@@ -1,69 +1,69 @@
 {
   "_comentario": "GENERADO por scripts/vigilar-pronabec.mjs. Huella del contenido de cada página de concurso, para detectar cambios. No editar a mano.",
-  "revisadoEl": "2026-09-14",
+  "revisadoEl": "2026-09-21",
   "paginas": {
     "beca-18": {
-      "huella": "64135867c22ff54a",
+      "huella": "2c1a889f9b1322cd",
       "cierre": null
     },
     "beca-alianza-del-pacifico": {
-      "huella": "b5191c8faa721a1b",
+      "huella": "8563242079447d7f",
       "cierre": null
     },
     "beca-espana-posgrado": {
-      "huella": "4ff3258df846b517",
+      "huella": "aaec47603db9188b",
       "cierre": "2026-10-20"
     },
     "beca-generacion-bicentenario": {
-      "huella": "02a78a16e642561e",
+      "huella": "bec805e845e5d3e8",
       "cierre": null
     },
     "beca-hijos-de-docentes": {
-      "huella": "08d89401ce8faccf",
+      "huella": "a4587aa05680b210",
       "cierre": null
     },
     "beca-inclusion-carreras-profesionales": {
-      "huella": "bf39b6caa4dc013c",
+      "huella": "c74438e15cfddc76",
       "cierre": null
     },
     "beca-india-itec-2026-2027": {
-      "huella": "916b9e9612003c9d",
+      "huella": "d1c5fa9c20429ca3",
       "cierre": "2026-11-14"
     },
     "beca-permanencia": {
-      "huella": "25f3f2587d371899",
+      "huella": "f4fc000076aa7662",
       "cierre": null
     },
     "beca-peru": {
-      "huella": "aece31d46ffebbbd",
+      "huella": "fb343ed6444e2fe3",
       "cierre": null
     },
     "beca-productiva": {
-      "huella": "9923f9737ac0735b",
+      "huella": "f2a03c00b648799f",
       "cierre": null
     },
     "beca-tailandia-2026": {
-      "huella": "9f1e5cbcd33c5f58",
+      "huella": "2460d1a007f10a50",
       "cierre": "2026-11-14"
     },
     "beca-tailandia-servidores": {
-      "huella": "efff576a8276e0e3",
+      "huella": "1f2eab696557e055",
       "cierre": "2026-11-14"
     },
     "beca-tec": {
-      "huella": "8f2b3c9e1bb42767",
+      "huella": "9d0264c83ebf1904",
       "cierre": null
     },
     "credito-maestria": {
-      "huella": "764928b3625b828f",
+      "huella": "0b6734c8668345e3",
       "cierre": null
     },
     "credito-pro": {
-      "huella": "2b83705338320bcf",
+      "huella": "4f526df855f18eb1",
       "cierre": null
     },
     "credito-talento": {
-      "huella": "4b1780a8d72dca7b",
+      "huella": "297ac822f55a99f7",
       "cierre": null
     }
   }

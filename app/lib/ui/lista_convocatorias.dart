@@ -8,8 +8,10 @@
 
 import 'package:flutter/material.dart';
 
+import '../datos/guardadas.dart';
 import '../modelo/convocatoria.dart';
 import '../motor/estado.dart';
+import 'boton_guardar.dart';
 import 'paleta.dart';
 
 /// Una fila de la lista: o es un encabezado de grupo, o es una ficha.
@@ -35,6 +37,8 @@ class ListaConvocatorias extends StatelessWidget {
     required this.acento,
     required this.onTocar,
     required this.onRefrescar,
+    required this.guardadas,
+    required this.coleccion,
     this.aviso,
     this.vacioTitulo = 'Todavía no hay nada publicado',
     this.vacioDetalle =
@@ -46,6 +50,9 @@ class ListaConvocatorias extends StatelessWidget {
   final Acento acento;
   final void Function(Ficha) onTocar;
   final Future<void> Function() onRefrescar;
+
+  final Guardadas guardadas;
+  final Coleccion coleccion;
 
   /// Banda superior opcional: "sin conexión, datos del 12 de agosto".
   final Widget? aviso;
@@ -84,6 +91,8 @@ class ListaConvocatorias extends StatelessWidget {
                       ficha: fila.ficha,
                       acento: acento,
                       onTocar: () => onTocar(fila.ficha),
+                      guardadas: guardadas,
+                      coleccion: coleccion,
                     ),
                 };
               },
@@ -224,11 +233,20 @@ class TarjetaConvocatoria extends StatelessWidget {
     required this.ficha,
     required this.acento,
     required this.onTocar,
+    required this.guardadas,
+    required this.coleccion,
   });
 
   final Ficha ficha;
   final Acento acento;
   final VoidCallback onTocar;
+
+  /// La tarjeta se suscribe ella misma a las guardadas en vez de recibir
+  /// un booleano ya resuelto. Antes dependía de que algún ancestro la
+  /// reconstruyera, y el marcador no reaccionaba al toque cuando no lo
+  /// había — un acoplamiento invisible que solo aparecía en pruebas.
+  final Guardadas guardadas;
+  final Coleccion coleccion;
 
   @override
   Widget build(BuildContext context) {
@@ -270,17 +288,41 @@ class TarjetaConvocatoria extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (item.entidad.isNotEmpty)
-                    Text(
-                      item.entidad.toUpperCase(),
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 0.6,
-                        color: apagada ? Paleta.grisClaro : acento.oscuro,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          item.entidad.toUpperCase(),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.6,
+                            color: apagada ? Paleta.grisClaro : acento.oscuro,
+                          ),
+                        ),
                       ),
-                    ),
-                  const SizedBox(height: 5),
+                      // Sube un poco sobre el texto para que el área
+                      // táctil no coma el margen de la tarjeta.
+                      Transform.translate(
+                        offset: const Offset(6, -6),
+                        // Solo el marcador se repinta al guardar, no la
+                        // tarjeta entera ni la lista.
+                        child: ListenableBuilder(
+                          listenable: guardadas,
+                          builder: (context, _) => BotonGuardar(
+                            guardada: guardadas.tiene(coleccion, item.id),
+                            acento: acento,
+                            nombre: item.nombre,
+                            onPulsar: () =>
+                                guardadas.alternar(coleccion, item.id),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                   Text(
                     item.nombre,
                     maxLines: 2,

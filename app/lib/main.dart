@@ -11,6 +11,7 @@
 
 import 'package:flutter/material.dart';
 
+import 'datos/guardadas.dart';
 import 'datos/repositorio.dart';
 import 'modelo/convocatoria.dart';
 import 'motor/estado.dart';
@@ -53,15 +54,30 @@ class PantallaInicio extends StatefulWidget {
 
 class _PantallaInicioState extends State<PantallaInicio> {
   final _repositorio = Repositorio();
+  final _guardadas = Guardadas();
 
   Catalogo? _catalogo;
   Object? _error;
   bool _cargando = true;
 
+  /// Filtro de "solo lo guardado". Es por pestaña en la cabeza del
+  /// usuario, pero una sola bandera basta: al cambiar de pestaña se
+  /// mantiene, que es lo que se espera de un filtro.
+  bool _soloGuardadas = false;
+
   @override
   void initState() {
     super.initState();
     _cargar();
+    // El catálogo viene de la red; las guardadas, del disco. Van por
+    // separado para que lo guardado aparezca aunque no haya señal.
+    _guardadas.cargar();
+  }
+
+  @override
+  void dispose() {
+    _guardadas.dispose();
+    super.dispose();
   }
 
   Future<void> _cargar() async {
@@ -83,12 +99,24 @@ class _PantallaInicioState extends State<PantallaInicio> {
     }
   }
 
-  void _abrirDetalle(Ficha ficha, Acento acento) {
+  void _abrirDetalle(Ficha ficha, Acento acento, Coleccion coleccion) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => PantallaDetalle(ficha: ficha, acento: acento),
+        builder: (_) => PantallaDetalle(
+          ficha: ficha,
+          acento: acento,
+          guardadas: _guardadas,
+          coleccion: coleccion,
+        ),
       ),
     );
+  }
+
+  /// Aplica el filtro de guardadas. El orden y la agrupación ya vienen
+  /// hechos del motor: aquí solo se quita lo que no está marcado.
+  List<Ficha> _filtrar(List<Ficha> fichas, Coleccion coleccion) {
+    if (!_soloGuardadas) return fichas;
+    return fichas.where((f) => _guardadas.tiene(coleccion, f.item.id)).toList();
   }
 
   @override
@@ -104,6 +132,19 @@ class _PantallaInicioState extends State<PantallaInicio> {
           elevation: 0,
           titleSpacing: 20,
           title: const _Marca(),
+          actions: [
+            ListenableBuilder(
+              listenable: _guardadas,
+              builder: (context, _) => _BotonFiltroGuardadas(
+                activo: _soloGuardadas,
+                cuantas: _guardadas.cuantas(Coleccion.becas) +
+                    _guardadas.cuantas(Coleccion.voluntariados),
+                onPulsar: () =>
+                    setState(() => _soloGuardadas = !_soloGuardadas),
+              ),
+            ),
+            const SizedBox(width: 8),
+          ],
           bottom: const TabBar(
             labelColor: Paleta.negro,
             unselectedLabelColor: Paleta.grisClaro,
@@ -121,28 +162,52 @@ class _PantallaInicioState extends State<PantallaInicio> {
           (_, null, final error?) => error is CatalogoIncompatible
               ? _DebeActualizarse(error: error)
               : _SinConexion(onReintentar: _cargar),
-          (_, final c?, _) => TabBarView(
-              children: [
-                ListaConvocatorias(
-                  fichas: aFichas(c.becas),
-                  acento: Acento.becas,
-                  aviso: _avisos(c),
-                  onRefrescar: _cargar,
-                  onTocar: (f) => _abrirDetalle(f, Acento.becas),
-                ),
-                ListaConvocatorias(
-                  fichas: aFichas(c.voluntariados),
-                  acento: Acento.voluntariados,
-                  aviso: _avisos(c),
-                  onRefrescar: _cargar,
-                  vacioTitulo: 'Aún no hay voluntariados publicados',
-                  vacioDetalle:
-                      'No existe una fuente oficial única de voluntariados como '
-                      'la de Pronabec, así que este catálogo se carga a mano y '
-                      'solo con convocatorias confirmadas.',
-                  onTocar: (f) => _abrirDetalle(f, Acento.voluntariados),
-                ),
-              ],
+          (_, final c?, _) => ListenableBuilder(
+              listenable: _guardadas,
+              builder: (context, _) => TabBarView(
+                children: [
+                  ListaConvocatorias(
+                    fichas: _filtrar(aFichas(c.becas), Coleccion.becas),
+                    acento: Acento.becas,
+                    aviso: _avisos(c),
+                    onRefrescar: _cargar,
+                    guardadas: _guardadas,
+                    coleccion: Coleccion.becas,
+                    vacioTitulo: _soloGuardadas
+                        ? 'No has guardado ninguna beca'
+                        : 'Todavía no hay nada publicado',
+                    vacioDetalle: _soloGuardadas
+                        ? 'Toca el marcador de una convocatoria para tenerla '
+                            'a mano. Se guarda en tu teléfono, sin cuenta ni '
+                            'conexión.'
+                        : 'Un catálogo vacío es preferible a fechas sin '
+                            'verificar. En cuanto haya una convocatoria '
+                            'confirmada, aparecerá aquí.',
+                    onTocar: (f) =>
+                        _abrirDetalle(f, Acento.becas, Coleccion.becas),
+                  ),
+                  ListaConvocatorias(
+                    fichas: _filtrar(
+                        aFichas(c.voluntariados), Coleccion.voluntariados),
+                    acento: Acento.voluntariados,
+                    aviso: _avisos(c),
+                    onRefrescar: _cargar,
+                    guardadas: _guardadas,
+                    coleccion: Coleccion.voluntariados,
+                    vacioTitulo: _soloGuardadas
+                        ? 'No has guardado ningún voluntariado'
+                        : 'Aún no hay voluntariados publicados',
+                    vacioDetalle: _soloGuardadas
+                        ? 'Toca el marcador de un voluntariado para tenerlo '
+                            'a mano.'
+                        : 'No existe una fuente oficial única de voluntariados '
+                            'como la de Pronabec, así que este catálogo se '
+                            'carga a mano y solo con convocatorias confirmadas.',
+                    onTocar: (f) => _abrirDetalle(
+                        f, Acento.voluntariados, Coleccion.voluntariados),
+                  ),
+                ],
+              ),
             ),
           _ => const _Cargando(),
         },
@@ -211,6 +276,70 @@ class _Banda extends StatelessWidget {
               ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Alterna entre el catálogo completo y solo lo guardado.
+///
+/// Lleva el contador encima porque, sin él, el filtro parece roto
+/// cuando no hay nada marcado: se toca, no cambia nada visible, y no
+/// queda claro si falló o si de verdad está vacío.
+class _BotonFiltroGuardadas extends StatelessWidget {
+  const _BotonFiltroGuardadas({
+    required this.activo,
+    required this.cuantas,
+    required this.onPulsar,
+  });
+
+  final bool activo;
+  final int cuantas;
+  final VoidCallback onPulsar;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      selected: activo,
+      label: activo
+          ? 'Mostrando solo guardadas. Volver al catálogo completo'
+          : 'Ver solo guardadas ($cuantas)',
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          IconButton(
+            onPressed: onPulsar,
+            tooltip: activo ? 'Ver todo el catálogo' : 'Ver solo guardadas',
+            icon: Icon(
+              activo ? Icons.bookmark : Icons.bookmark_border,
+              color: activo ? Paleta.morado500 : Paleta.gris,
+            ),
+          ),
+          if (cuantas > 0 && !activo)
+            Positioned(
+              top: 6,
+              right: 6,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                constraints: const BoxConstraints(minWidth: 16),
+                decoration: BoxDecoration(
+                  color: Paleta.morado500,
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: Text(
+                  cuantas > 99 ? '99+' : '$cuantas',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 10,
+                    height: 1.3,
+                    fontWeight: FontWeight.w700,
+                    color: Paleta.blanco,
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );

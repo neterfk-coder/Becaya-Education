@@ -10,15 +10,25 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../datos/guardadas.dart';
 import '../modelo/convocatoria.dart';
 import '../motor/estado.dart';
+import 'boton_guardar.dart';
 import 'paleta.dart';
 
 class PantallaDetalle extends StatelessWidget {
-  const PantallaDetalle({super.key, required this.ficha, required this.acento});
+  const PantallaDetalle({
+    super.key,
+    required this.ficha,
+    required this.acento,
+    required this.guardadas,
+    required this.coleccion,
+  });
 
   final Ficha ficha;
   final Acento acento;
+  final Guardadas guardadas;
+  final Coleccion coleccion;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +46,21 @@ class PantallaDetalle extends StatelessWidget {
           item.entidad.isEmpty ? 'Convocatoria' : item.entidad,
           style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
         ),
+        actions: [
+          // Se reconstruye solo este botón cuando cambian las guardadas,
+          // no la pantalla entera.
+          ListenableBuilder(
+            listenable: guardadas,
+            builder: (context, _) => BotonGuardar(
+              guardada: guardadas.tiene(coleccion, item.id),
+              acento: acento,
+              nombre: item.nombre,
+              grande: true,
+              onPulsar: () => guardadas.alternar(coleccion, item.id),
+            ),
+          ),
+          const SizedBox(width: 4),
+        ],
       ),
       bottomNavigationBar: _BarraAccion(item: item, acento: acento),
       body: ListView(

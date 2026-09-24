@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Degradado de arranque. Los mismos colores que usa la intro de
+    Flutter (ui/intro.dart) y que el icono del lanzador: morado de
+    marca arriba, morado profundo abajo.
+
+    angle=270 es de arriba hacia abajo.
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient
+        android:startColor="#7C3AED"
+        android:endColor="#4C1D95"
+        android:angle="270" />
+</shape>

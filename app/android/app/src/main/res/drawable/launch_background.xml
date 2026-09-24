@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Modify this file to customize your launch splash screen -->
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@android:color/white" />
+<!--
+    Lo que Android pinta ANTES de que Flutter arranque.
 
-    <!-- You can insert your own image assets here -->
-    <!-- <item>
-        <bitmap
-            android:gravity="center"
-            android:src="@mipmap/launch_image" />
-    </item> -->
+    Por defecto era blanco, y eso producía un destello blanco entre el
+    icono morado del lanzador y la intro morada de la app. Con el mismo
+    degradado, abrir becaya se ve como una sola transición.
+
+    No lleva el logo a propósito: esta capa y la intro de Flutter se
+    solapan unos milisegundos, y dos "b" con tamaños ligeramente
+    distintos producirían un salto visible. La letra la pone la intro.
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/fondo_arranque" />
 </layer-list>

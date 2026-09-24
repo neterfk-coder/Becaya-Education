@@ -17,8 +17,10 @@ import 'datos/sesion.dart';
 import 'datos/sincronizacion.dart';
 import 'modelo/convocatoria.dart';
 import 'motor/estado.dart';
+import 'ui/ajustes.dart';
 import 'ui/cuenta.dart';
 import 'ui/detalle.dart';
+import 'ui/intro.dart';
 import 'ui/lista_convocatorias.dart';
 import 'ui/paleta.dart';
 
@@ -43,7 +45,10 @@ class AppBecaya extends StatelessWidget {
           primary: Paleta.morado500,
         ),
       ),
-      home: const PantallaInicio(),
+      // La pantalla de inicio se monta ya, debajo de la intro: así el
+      // catálogo se descarga mientras se ve la marca, en vez de
+      // empezar a cargar cuando la intro termina.
+      home: const Arranque(hijo: PantallaInicio()),
     );
   }
 }
@@ -181,7 +186,13 @@ class _PantallaInicioState extends State<PantallaInicio> {
                 ),
               ),
             ),
-            const SizedBox(width: 4),
+            IconButton(
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const PantallaAjustes()),
+              ),
+              tooltip: 'Ajustes',
+              icon: const Icon(Icons.more_vert, color: Paleta.gris),
+            ),
           ],
           bottom: const TabBar(
             labelColor: Paleta.negro,

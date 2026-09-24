@@ -1,0 +1,36 @@
+name: becaya
+description: "Becaya - calendario de becas y voluntariados para Peru"
+publish_to: 'none'
+
+# Primer número: lo que ve el usuario. Segundo: versionCode de Android,
+# que solo puede subir. Ver docs/publicar.md antes de tocarlo.
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+  # Descarga del catálogo publicado (data/becas.json del sitio).
+  http: ^1.2.2
+
+  # Caché del último catálogo descargado, para abrir sin conexión.
+  shared_preferences: ^2.3.2
+
+  # Abre la convocatoria oficial en el navegador del teléfono. Nunca
+  # mostramos el trámite dentro de la app: el usuario tiene que ver la
+  # barra de direcciones oficial antes de escribir sus datos.
+  url_launcher: ^6.3.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true

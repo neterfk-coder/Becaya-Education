@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Capa de fondo del icono adaptativo.
+
+    Va como vector y no como PNG porque es un degradado plano: así pesa
+    nada y se ve nítido en cualquier densidad. Los colores son los de
+    marca (morado-500 y morado-600) de assets/css/styles.css.
+
+    angle=270 es de arriba hacia abajo, igual que el degradado que
+    tool/generar_iconos.ps1 pinta en el icono clásico.
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient
+        android:startColor="#7C3AED"
+        android:endColor="#6D28D9"
+        android:angle="270" />
+</shape>

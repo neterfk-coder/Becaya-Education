@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Icono adaptativo (Android 8 en adelante).
+
+    El lanzador recorta estas dos capas con la forma que use cada
+    fabricante — círculo, cuadrado redondeado, gota — y las mueve un
+    poco al animarlas. Por eso el icono se entrega en capas y no como
+    una imagen plana: si fuera plana, cada recorte le comería un trozo
+    distinto a la letra.
+
+    Los PNG de mipmap-*/ic_launcher.png siguen ahí para Android 7 y
+    anteriores, que no entienden este formato.
+
+    monochrome es para los iconos temáticos de Android 13+, donde el
+    sistema repinta la silueta con el color del fondo de pantalla. Se
+    reutiliza la misma capa frontal porque solo se usa su transparencia.
+-->
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@drawable/ic_launcher_background" />
+    <foreground android:drawable="@mipmap/ic_launcher_foreground" />
+    <monochrome android:drawable="@mipmap/ic_launcher_foreground" />
+</adaptive-icon>

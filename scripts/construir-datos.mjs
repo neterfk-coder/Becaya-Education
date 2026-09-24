@@ -12,8 +12,8 @@
      data/voluntariados-manual.json voluntariados cargados a mano
 
    Salidas (generadas, NO se editan a mano):
-     data/becas.json                catálogo de becas unido
-     data/voluntariados.json        catálogo de voluntariados
+     data/becas.json                catálogo de becas unido      ← contrato público
+     data/voluntariados.json        catálogo de voluntariados    ← contrato público
      assets/js/datos.js             BECAS, para el navegador
      assets/js/voluntariados.js     VOLUNTARIADOS, para el navegador
 
@@ -30,6 +30,25 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const RAIZ = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+
+/* ------------------------------------------------------------
+   Versión del CONTRATO de data/becas.json y data/voluntariados.json.
+
+   Estos dos archivos dejaron de ser internos: la app de Android los
+   descarga directamente. Una vez que alguien instala el APK, sigue
+   pidiendo este mismo archivo durante meses o años, aunque nunca
+   actualice la app. Eso convierte al JSON en una API pública.
+
+   La regla, dentro de una misma versión:
+     · Se PUEDEN agregar campos nuevos. Los lectores viejos los ignoran.
+     · NO se renombra, NO se borra y NO se cambia el significado de un
+       campo existente — eso deja ciegas a las versiones instaladas.
+
+   Solo se sube este número cuando se rompe algo a propósito. Al verlo
+   subir, una app vieja deja de leer el catálogo y pide actualizarse,
+   en vez de mostrar datos que ya no entiende.
+   ------------------------------------------------------------ */
+const VERSION_CATALOGO = 1;
 
 const NIVELES = ["pregrado", "posgrado", "ambos"];
 const DESTINOS = ["peru", "extranjero"];
@@ -296,6 +315,29 @@ async function guardar(ruta, contenido) {
   console.log("Escrito: " + ruta);
 }
 
+/* Envuelve una colección en el sobre público del catálogo.
+
+   La lista va bajo su propio nombre ("becas" / "voluntariados") y no
+   bajo una clave genérica tipo "items": así un archivo suelto se puede
+   identificar sin saber de dónde salió.
+
+   `ejemplo` y `actualizado` viajan con los datos a propósito. La web ya
+   los usaba para avisar cuándo se revisó el catálogo por última vez; sin
+   meterlos aquí, la app no tendría forma de mostrar ese mismo aviso. */
+function envolver(clave, coleccion) {
+  return JSON.stringify(
+    {
+      version: VERSION_CATALOGO,
+      generado: new Date().toISOString(),
+      actualizado: coleccion.actualizado,
+      ejemplo: coleccion.ejemplo,
+      [clave]: coleccion.items
+    },
+    null,
+    2
+  ) + "\n";
+}
+
 function hoyISO() {
   const d = new Date();
   const mes = String(d.getMonth() + 1).padStart(2, "0");
@@ -336,8 +378,8 @@ export async function construir() {
     revisarVoluntariado
   );
 
-  await guardar("data/becas.json", JSON.stringify(becas.items, null, 2) + "\n");
-  await guardar("data/voluntariados.json", JSON.stringify(voluntariados.items, null, 2) + "\n");
+  await guardar("data/becas.json", envolver("becas", becas));
+  await guardar("data/voluntariados.json", envolver("voluntariados", voluntariados));
 
   const encabezado = (nombreArchivo, nombreFuente) => `/* ============================================================
    ${nombreArchivo} — GENERADO AUTOMÁTICAMENTE, NO EDITAR A MANO

@@ -155,8 +155,38 @@ test("el orden es consistente al invertir los argumentos", () => {
    comprueban que lo publicado esté bien, no que haya algo publicado. */
 const ISO = /^\d{4}-\d{2}-\d{2}$/;
 
+/* La versión de contrato que esperan estas pruebas. Si alguien sube
+   VERSION_CATALOGO en construir-datos.mjs, esta prueba falla y obliga a
+   revisar qué se rompió y a actualizar también la app antes de publicar. */
+const VERSION_ESPERADA = 1;
+
+/* Lee el sobre público y devuelve la colección de adentro. */
+function leerCatalogo(ruta, clave) {
+  const sobre = JSON.parse(readFileSync(resolve(RAIZ, ruta), "utf8"));
+  return sobre[clave];
+}
+
+test("el catálogo publicado viene en el sobre que espera la app", () => {
+  /* data/becas.json ya no es un archivo interno: lo descarga la app de
+     Android. Un APK instalado hace meses sigue pidiendo este archivo,
+     así que la forma del sobre es un contrato, no un detalle. */
+  for (const [ruta, clave] of [
+    ["data/becas.json", "becas"],
+    ["data/voluntariados.json", "voluntariados"]
+  ]) {
+    const sobre = JSON.parse(readFileSync(resolve(RAIZ, ruta), "utf8"));
+
+    assert.equal(sobre.version, VERSION_ESPERADA,
+      `${ruta}: cambió la versión del contrato — actualiza también la app`);
+    assert.ok(Array.isArray(sobre[clave]),
+      `${ruta}: la colección debe ir bajo la clave "${clave}"`);
+    assert.equal(typeof sobre.ejemplo, "boolean", `${ruta}: falta la marca "ejemplo"`);
+    assert.match(String(sobre.actualizado), ISO, `${ruta}: "actualizado" no es AAAA-MM-DD`);
+  }
+});
+
 test("todas las becas publicadas tienen fecha y enlace válidos", async () => {
-  const becas = JSON.parse(readFileSync(resolve(RAIZ, "data/becas.json"), "utf8"));
+  const becas = leerCatalogo("data/becas.json", "becas");
 
   const ids = new Set();
   for (const b of becas) {
@@ -179,7 +209,7 @@ test("toda beca publicada deja constancia de cuándo se verificó", async () => 
   /* La regla central del proyecto: si está publicada, alguien la
      comprobó contra la web oficial y anotó cuándo. Sin esto, el
      catálogo envejece sin que nadie pueda saber cuánto. */
-  const becas = JSON.parse(readFileSync(resolve(RAIZ, "data/becas.json"), "utf8"));
+  const becas = leerCatalogo("data/becas.json", "becas");
   for (const b of becas) {
     assert.match(String(b.verificadaEl), ISO, `${b.id}: sin fecha de verificación`);
     assert.ok(
@@ -190,7 +220,7 @@ test("toda beca publicada deja constancia de cuándo se verificó", async () => 
 });
 
 test("todos los voluntariados publicados tienen fecha y enlace válidos", async () => {
-  const voluntariados = JSON.parse(readFileSync(resolve(RAIZ, "data/voluntariados.json"), "utf8"));
+  const voluntariados = leerCatalogo("data/voluntariados.json", "voluntariados");
 
   const MODALIDADES = ["presencial", "virtual", "hibrida"];
   const ids = new Set();
@@ -212,8 +242,8 @@ test("becas y voluntariados son catálogos separados (sin campos cruzados)", asy
   /* Verifica que la separación sea real y no solo de nombre: un
      voluntariado no debe traer campos de becas (nivel/cobertura) y
      viceversa, porque eso indicaría que en algún punto se mezclaron. */
-  const becas = JSON.parse(readFileSync(resolve(RAIZ, "data/becas.json"), "utf8"));
-  const voluntariados = JSON.parse(readFileSync(resolve(RAIZ, "data/voluntariados.json"), "utf8"));
+  const becas = leerCatalogo("data/becas.json", "becas");
+  const voluntariados = leerCatalogo("data/voluntariados.json", "voluntariados");
 
   for (const b of becas) {
     assert.ok(!("modalidad" in b), `${b.id}: una beca no debería tener "modalidad"`);

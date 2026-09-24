@@ -181,7 +181,8 @@ async function principal() {
   /* Recordatorio de frescura: aunque nada cambie, un catálogo que nadie
      mira envejece igual. */
   try {
-    const becas = JSON.parse(await readFile(resolve(RAIZ, "data/becas.json"), "utf8"));
+    const catalogo = JSON.parse(await readFile(resolve(RAIZ, "data/becas.json"), "utf8"));
+    const becas = catalogo.becas ?? [];
     const hoy = new Date().toISOString().slice(0, 10);
     const viejas = becas.filter((b) => {
       if (!b.verificadaEl) return true;

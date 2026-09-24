@@ -1,94 +1,100 @@
-[
-  {
-    "id": "pronabec-espana-posgrado-2026",
-    "nombre": "Beca España Posgrado 2026",
-    "institucion": "Pronabec",
-    "nivel": "posgrado",
-    "destino": "extranjero",
-    "pais": "España",
-    "cobertura": "parcial",
-    "areas": [
-      "Todas las áreas"
-    ],
-    "apertura": "2026-03-01",
-    "cierre": "2026-10-20",
-    "resumen": "Beca de Pronabec para cursar un máster en España. Las bases oficiales detallan requisitos, cobertura y proceso de admisión.",
-    "requisitos": [],
-    "beneficios": [],
-    "enlace": "https://www.pronabec.gob.pe/beca-espana-posgrado/",
-    "imagen": null,
-    "imagenCredito": null,
-    "fuente": "Web oficial Pronabec",
-    "verificadaEl": "2026-08-12",
-    "notaVerificacion": "Plazo confirmado por dos vías en la página oficial: el texto dice 'Convocatoria del 1 de marzo al 20 de octubre de 2026' y el contador de la página lleva data-date=1792558740 (20/10/2026 23:59 hora de Perú)."
-  },
-  {
-    "id": "pronabec-india-itec-2026-2027",
-    "nombre": "Beca India ITEC 2026-2027",
-    "institucion": "Pronabec",
-    "nivel": "posgrado",
-    "destino": "extranjero",
-    "pais": "India",
-    "cobertura": "parcial",
-    "areas": [
-      "Todas las áreas"
-    ],
-    "apertura": null,
-    "cierre": "2026-11-14",
-    "resumen": "Programa ITEC del Gobierno de la India, difundido por Pronabec. Consulta las bases oficiales para requisitos, cobertura y áreas elegibles.",
-    "requisitos": [],
-    "beneficios": [],
-    "enlace": "https://www.pronabec.gob.pe/beca-india-itec-2026-2027/",
-    "imagen": null,
-    "imagenCredito": null,
-    "fuente": "Web oficial Pronabec",
-    "verificadaEl": "2026-08-12",
-    "notaVerificacion": "Cierre tomado del contador de la página oficial (data-date=1794718740 = 14/11/2026 23:59 hora de Perú). La fecha de apertura no está publicada, por eso va en null."
-  },
-  {
-    "id": "pronabec-tailandia-2026",
-    "nombre": "Beca Tailandia 2026",
-    "institucion": "Pronabec",
-    "nivel": "posgrado",
-    "destino": "extranjero",
-    "pais": "Tailandia",
-    "cobertura": "parcial",
-    "areas": [
-      "Todas las áreas"
-    ],
-    "apertura": null,
-    "cierre": "2026-11-14",
-    "resumen": "Beca para estudios en Tailandia difundida por Pronabec. Consulta las bases oficiales para requisitos, cobertura y áreas elegibles.",
-    "requisitos": [],
-    "beneficios": [],
-    "enlace": "https://www.pronabec.gob.pe/beca-tailandia-2026/",
-    "imagen": null,
-    "imagenCredito": null,
-    "fuente": "Web oficial Pronabec",
-    "verificadaEl": "2026-08-12",
-    "notaVerificacion": "Cierre tomado del contador de la página oficial (data-date=1794718740 = 14/11/2026 23:59 hora de Perú). La fecha de apertura no está publicada, por eso va en null."
-  },
-  {
-    "id": "pronabec-tailandia-servidores-2026",
-    "nombre": "Beca Tailandia Servidores 2026",
-    "institucion": "Pronabec",
-    "nivel": "posgrado",
-    "destino": "extranjero",
-    "pais": "Tailandia",
-    "cobertura": "parcial",
-    "areas": [
-      "Todas las áreas"
-    ],
-    "apertura": null,
-    "cierre": "2026-11-14",
-    "resumen": "Beca para estudios en Tailandia dirigida a servidores públicos, difundida por Pronabec. Consulta las bases oficiales para requisitos y cobertura.",
-    "requisitos": [],
-    "beneficios": [],
-    "enlace": "https://www.pronabec.gob.pe/beca-tailandia-servidores/",
-    "imagen": null,
-    "imagenCredito": null,
-    "fuente": "Web oficial Pronabec",
-    "verificadaEl": "2026-08-12",
-    "notaVerificacion": "Cierre tomado del contador de la página oficial (data-date=1794718740 = 14/11/2026 23:59 hora de Perú). La fecha de apertura no está publicada, por eso va en null."
-  }
-]
+{
+  "version": 1,
+  "generado": "2026-09-24T01:03:03.995Z",
+  "actualizado": "2026-08-12",
+  "ejemplo": false,
+  "becas": [
+    {
+      "id": "pronabec-espana-posgrado-2026",
+      "nombre": "Beca España Posgrado 2026",
+      "institucion": "Pronabec",
+      "nivel": "posgrado",
+      "destino": "extranjero",
+      "pais": "España",
+      "cobertura": "parcial",
+      "areas": [
+        "Todas las áreas"
+      ],
+      "apertura": "2026-03-01",
+      "cierre": "2026-10-20",
+      "resumen": "Beca de Pronabec para cursar un máster en España. Las bases oficiales detallan requisitos, cobertura y proceso de admisión.",
+      "requisitos": [],
+      "beneficios": [],
+      "enlace": "https://www.pronabec.gob.pe/beca-espana-posgrado/",
+      "imagen": null,
+      "imagenCredito": null,
+      "fuente": "Web oficial Pronabec",
+      "verificadaEl": "2026-08-12",
+      "notaVerificacion": "Plazo confirmado por dos vías en la página oficial: el texto dice 'Convocatoria del 1 de marzo al 20 de octubre de 2026' y el contador de la página lleva data-date=1792558740 (20/10/2026 23:59 hora de Perú)."
+    },
+    {
+      "id": "pronabec-india-itec-2026-2027",
+      "nombre": "Beca India ITEC 2026-2027",
+      "institucion": "Pronabec",
+      "nivel": "posgrado",
+      "destino": "extranjero",
+      "pais": "India",
+      "cobertura": "parcial",
+      "areas": [
+        "Todas las áreas"
+      ],
+      "apertura": null,
+      "cierre": "2026-11-14",
+      "resumen": "Programa ITEC del Gobierno de la India, difundido por Pronabec. Consulta las bases oficiales para requisitos, cobertura y áreas elegibles.",
+      "requisitos": [],
+      "beneficios": [],
+      "enlace": "https://www.pronabec.gob.pe/beca-india-itec-2026-2027/",
+      "imagen": null,
+      "imagenCredito": null,
+      "fuente": "Web oficial Pronabec",
+      "verificadaEl": "2026-08-12",
+      "notaVerificacion": "Cierre tomado del contador de la página oficial (data-date=1794718740 = 14/11/2026 23:59 hora de Perú). La fecha de apertura no está publicada, por eso va en null."
+    },
+    {
+      "id": "pronabec-tailandia-2026",
+      "nombre": "Beca Tailandia 2026",
+      "institucion": "Pronabec",
+      "nivel": "posgrado",
+      "destino": "extranjero",
+      "pais": "Tailandia",
+      "cobertura": "parcial",
+      "areas": [
+        "Todas las áreas"
+      ],
+      "apertura": null,
+      "cierre": "2026-11-14",
+      "resumen": "Beca para estudios en Tailandia difundida por Pronabec. Consulta las bases oficiales para requisitos, cobertura y áreas elegibles.",
+      "requisitos": [],
+      "beneficios": [],
+      "enlace": "https://www.pronabec.gob.pe/beca-tailandia-2026/",
+      "imagen": null,
+      "imagenCredito": null,
+      "fuente": "Web oficial Pronabec",
+      "verificadaEl": "2026-08-12",
+      "notaVerificacion": "Cierre tomado del contador de la página oficial (data-date=1794718740 = 14/11/2026 23:59 hora de Perú). La fecha de apertura no está publicada, por eso va en null."
+    },
+    {
+      "id": "pronabec-tailandia-servidores-2026",
+      "nombre": "Beca Tailandia Servidores 2026",
+      "institucion": "Pronabec",
+      "nivel": "posgrado",
+      "destino": "extranjero",
+      "pais": "Tailandia",
+      "cobertura": "parcial",
+      "areas": [
+        "Todas las áreas"
+      ],
+      "apertura": null,
+      "cierre": "2026-11-14",
+      "resumen": "Beca para estudios en Tailandia dirigida a servidores públicos, difundida por Pronabec. Consulta las bases oficiales para requisitos y cobertura.",
+      "requisitos": [],
+      "beneficios": [],
+      "enlace": "https://www.pronabec.gob.pe/beca-tailandia-servidores/",
+      "imagen": null,
+      "imagenCredito": null,
+      "fuente": "Web oficial Pronabec",
+      "verificadaEl": "2026-08-12",
+      "notaVerificacion": "Cierre tomado del contador de la página oficial (data-date=1794718740 = 14/11/2026 23:59 hora de Perú). La fecha de apertura no está publicada, por eso va en null."
+    }
+  ]
+}

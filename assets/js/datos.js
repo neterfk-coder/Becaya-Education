@@ -7,7 +7,7 @@
 
      node scripts/construir-datos.mjs
 
-   Generado el 2026-08-12T23:27:33.387Z.
+   Generado el 2026-09-24T01:03:03.998Z.
    ============================================================ */
 
 const BECAS = [

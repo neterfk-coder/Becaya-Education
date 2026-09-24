@@ -29,17 +29,19 @@ becaya/
 │       └── app.js                 Filtros, búsqueda, panel de detalle, guardadas — de ambos
 ├── data/
 │   ├── manual.json                FUENTE — becas cargadas a mano
-│   ├── pronabec.json              GENERADO por sync-pronabec.mjs
+│   ├── pronabec.json              GENERADO por sync-pronabec.mjs (hoy vacío, ver docs)
 │   ├── voluntariados-manual.json  FUENTE — voluntariados cargados a mano
-│   ├── becas.json                 GENERADO — catálogo de becas unido
-│   └── voluntariados.json         GENERADO — catálogo de voluntariados
+│   ├── becas.json                 GENERADO — catálogo de becas + CONTRATO de la app
+│   └── voluntariados.json         GENERADO — catálogo de voluntariados + CONTRATO
 ├── scripts/
 │   ├── construir-datos.mjs        Une las fuentes y escribe lo que carga el navegador
-│   ├── sync-pronabec.mjs          Trae convocatorias reales desde la API de Pronabec
+│   ├── sync-pronabec.mjs          Importa el histórico del portal de datos abiertos
+│   ├── vigilar-pronabec.mjs       Vigila las páginas vivas y avisa de cambios
 │   └── probar.mjs                 Pruebas del motor de fechas y de ambos catálogos
+├── app/                           App móvil en Flutter (Android/iOS) — ver app/README.md
 ├── docs/
-│   ├── esquema-datos.md           Qué campo lleva cada beca/voluntariado y por qué
-│   └── despliegue.md              Cómo publicarlo gratis y cómo automatizar la actualización
+│   ├── esquema-datos.md           Qué campo lleva cada ficha, y el contrato de datos
+│   └── despliegue.md              Cómo se publica y cómo se mantienen frescos los datos
 └── README.md
 ```
 
@@ -102,10 +104,13 @@ cuando hay novedades. **Nunca publica una fecha por su cuenta**: solo te dice d�
 Los voluntariados y las becas internacionales se cargan igual, a mano, editando
 `data/voluntariados-manual.json` y `data/manual.json` según `docs/esquema-datos.md`.
 
-### Si algún día la API de Pronabec revive
+### El histórico de Pronabec
 
-`scripts/sync-pronabec.mjs` sigue en el repositorio para ese caso, pero **hoy no funciona**:
-apunta a un host que no resuelve. Léelo antes de usarlo.
+`scripts/sync-pronabec.mjs` sí funciona y no necesita clave de API, pero **hoy no aporta
+nada**: el portal de datos abiertos solo llega hasta 2021, y el corte `DESDE_ANIO = 2025`
+descarta todo lo anterior para que el catálogo no se llene de convocatorias cerradas hace
+años. Por eso `data/pronabec.json` queda vacío. Si quieres el histórico, baja ese número.
+El detalle está en `docs/despliegue.md`.
 
 ## Cómo funciona el calendario
 

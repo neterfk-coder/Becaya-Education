@@ -4,11 +4,61 @@ Este documento cubre dos catálogos independientes, con sus propios archivos y s
 sección en la web: **becas** y **voluntariados**. No se mezclan a propósito — ni en los
 datos, ni en la interfaz, ni en las becas guardadas.
 
+## El contrato público
+
+`data/becas.json` y `data/voluntariados.json` **ya no son archivos internos**: la app de
+Android (`app/`) los descarga directamente desde el sitio publicado. Eso los convierte en
+una API pública, aunque no lo parezcan.
+
+La consecuencia práctica: cuando alguien instala el APK, su teléfono sigue pidiendo estos
+mismos archivos durante meses o años, aunque nunca actualice la app. Un campo renombrado
+hoy deja ciega mañana a una versión instalada que nadie va a volver a tocar.
+
+Los dos archivos vienen envueltos así:
+
+```json
+{
+  "version": 1,
+  "generado": "2026-08-12T23:27:33.387Z",
+  "actualizado": "2026-08-12",
+  "ejemplo": false,
+  "becas": [ ... ]
+}
+```
+
+| Campo | Qué es |
+|---|---|
+| `version` | Versión del contrato. Ver reglas abajo. |
+| `generado` | Marca de tiempo del build. Sirve para depurar, no para decidir nada. |
+| `actualizado` | Fecha de revisión de la fuente menos reciente, en `AAAA-MM-DD`. Es lo que se le muestra al usuario. |
+| `ejemplo` | Si es `true`, las fechas no están verificadas y tanto la web como la app lo advierten en pantalla. |
+| `becas` / `voluntariados` | La colección. Va bajo su propio nombre, no bajo una clave genérica, para que un archivo suelto se pueda identificar. |
+
+**Las reglas, dentro de una misma `version`:**
+
+- **Se pueden agregar campos nuevos.** Los lectores viejos los ignoran sin enterarse.
+- **No se renombra, no se borra y no se cambia el significado** de un campo existente.
+- **No se reutiliza un `id`** para otra convocatoria. Los guardados del usuario y, más
+  adelante, sus notificaciones programadas, cuelgan de ese `id`.
+
+Solo se sube `VERSION_CATALOGO` (en `scripts/construir-datos.mjs`) cuando se rompe algo a
+propósito. Al verlo subir, la app deja de leer el catálogo y pide actualizarse, en vez de
+mostrar datos que ya no entiende. Hay tres pruebas que vigilan esto y fallan si el número
+del sitio y el de la app se separan:
+
+- `scripts/probar.mjs` → "el catálogo publicado viene en el sobre que espera la app"
+- `app/test/estado_test.dart` → "el catálogo del repo trae la versión de contrato que la app espera"
+- `app/test/repositorio_test.dart` → el comportamiento de la app ante una versión más nueva
+
+**El navegador no lee estos archivos.** La web usa `assets/js/datos.js`, que el mismo build
+genera con los mismos datos. Por eso un cambio en el sobre no afecta al sitio, solo a la app
+y a los scripts de Node.
+
 ## Becas
 
-Cada convocatoria es un objeto con estos campos. El archivo que lee el navegador es
-`assets/js/datos.js`; `data/becas.json` es la misma información en JSON, útil si más
-adelante mueves los datos a una base de datos o a una API propia.
+Cada convocatoria es un objeto con estos campos, dentro del arreglo `becas` del sobre
+descrito arriba. El archivo que lee el navegador es `assets/js/datos.js`, con la misma
+información.
 
 | Campo | Tipo | Obligatorio | Notas |
 |---|---|---|---|

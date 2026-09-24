@@ -12,7 +12,7 @@
 
 /// Lo que ve el usuario. Debe coincidir con la parte anterior al "+"
 /// de `version:` en pubspec.yaml.
-const versionApp = '1.0.0';
+const versionApp = '1.0.1';
 
 /// Quién hace la app. Aparece en Ajustes y tiene que coincidir con el
 /// nombre de desarrollador de Google Play y con el certificado de
@@ -22,3 +22,17 @@ const autorApp = 'NETRCD STUDIO';
 
 /// Año de publicación, para el aviso de derechos.
 const anioApp = 2026;
+
+/// Identificador en Google Play. Es el mismo `applicationId` de
+/// android/app/build.gradle.kts y NO se puede cambiar una vez
+/// publicada la app: cambiarlo crearía una app distinta y dejaría sin
+/// actualizaciones a quien ya la tenga instalada.
+const idPaquete = 'com.netrcd.becaya';
+
+/// Abre la ficha directamente en la app de Play Store, sin pasar por el
+/// navegador. Si Play no está instalado —un emulador, un teléfono sin
+/// servicios de Google— hay que caer a [urlPlayWeb].
+const urlPlayApp = 'market://details?id=$idPaquete';
+
+const urlPlayWeb =
+    'https://play.google.com/store/apps/details?id=$idPaquete';

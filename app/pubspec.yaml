@@ -4,7 +4,14 @@ publish_to: 'none'
 
 # Primer número: lo que ve el usuario. Segundo: versionCode de Android,
 # que solo puede subir. Ver docs/publicar.md antes de tocarlo.
-version: 1.0.0+1
+#
+# El versionCode (tras el "+") sube en CADA subida a Play, aunque el
+# envío anterior no llegara a publicarse: la consola rechaza cualquier
+# AAB que repita un número ya visto.
+#
+# 1.0.1 sí cambia el número visible porque esta versión trae cosas
+# nuevas para el usuario: ajustes con sus datos y valoración en Play.
+version: 1.0.1+3
 
 environment:
   sdk: ^3.11.1

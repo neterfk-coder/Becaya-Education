@@ -54,5 +54,13 @@
             <action android:name="android.intent.action.VIEW"/>
             <data android:scheme="https"/>
         </intent>
+        <!-- Para abrir la ficha en la app de Google Play (market://)
+             desde el valorador de estrellas. Sin declararlo, en Android
+             11+ la app no "ve" a Play y el botón no hace nada: no da
+             error, simplemente no pasa nada. -->
+        <intent>
+            <action android:name="android.intent.action.VIEW"/>
+            <data android:scheme="market"/>
+        </intent>
     </queries>
 </manifest>

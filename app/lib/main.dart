@@ -188,7 +188,13 @@ class _PantallaInicioState extends State<PantallaInicio> {
             ),
             IconButton(
               onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const PantallaAjustes()),
+                MaterialPageRoute(
+                  builder: (_) => PantallaAjustes(
+                    sesion: _sesion,
+                    guardadas: _guardadas,
+                    sincronizador: _sincronizador,
+                  ),
+                ),
               ),
               tooltip: 'Ajustes',
               icon: const Icon(Icons.more_vert, color: Paleta.gris),

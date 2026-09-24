@@ -13,8 +13,11 @@ import 'package:flutter/material.dart';
 
 import 'datos/guardadas.dart';
 import 'datos/repositorio.dart';
+import 'datos/sesion.dart';
+import 'datos/sincronizacion.dart';
 import 'modelo/convocatoria.dart';
 import 'motor/estado.dart';
+import 'ui/cuenta.dart';
 import 'ui/detalle.dart';
 import 'ui/lista_convocatorias.dart';
 import 'ui/paleta.dart';
@@ -55,6 +58,11 @@ class PantallaInicio extends StatefulWidget {
 class _PantallaInicioState extends State<PantallaInicio> {
   final _repositorio = Repositorio();
   final _guardadas = Guardadas();
+  final _sesion = Sesion();
+  late final _sincronizador = Sincronizador(
+    guardadas: _guardadas,
+    sesion: _sesion,
+  );
 
   Catalogo? _catalogo;
   Object? _error;
@@ -72,12 +80,29 @@ class _PantallaInicioState extends State<PantallaInicio> {
     // El catálogo viene de la red; las guardadas, del disco. Van por
     // separado para que lo guardado aparezca aunque no haya señal.
     _guardadas.cargar();
+    // Arrancar Firebase puede fallar —y falla mientras no esté
+    // configurado— sin que eso afecte a nada de lo anterior.
+    _sesion.iniciar();
   }
 
   @override
   void dispose() {
+    _sincronizador.dispose();
+    _sesion.dispose();
     _guardadas.dispose();
     super.dispose();
+  }
+
+  void _abrirCuenta() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => PantallaCuenta(
+          sesion: _sesion,
+          guardadas: _guardadas,
+          sincronizador: _sincronizador,
+        ),
+      ),
+    );
   }
 
   Future<void> _cargar() async {
@@ -143,7 +168,20 @@ class _PantallaInicioState extends State<PantallaInicio> {
                     setState(() => _soloGuardadas = !_soloGuardadas),
               ),
             ),
-            const SizedBox(width: 8),
+            ListenableBuilder(
+              listenable: _sesion,
+              builder: (context, _) => IconButton(
+                onPressed: _abrirCuenta,
+                tooltip: _sesion.dentro ? 'Tu cuenta' : 'Iniciar sesión',
+                icon: Icon(
+                  _sesion.dentro
+                      ? Icons.account_circle
+                      : Icons.account_circle_outlined,
+                  color: _sesion.dentro ? Paleta.morado500 : Paleta.gris,
+                ),
+              ),
+            ),
+            const SizedBox(width: 4),
           ],
           bottom: const TabBar(
             labelColor: Paleta.negro,

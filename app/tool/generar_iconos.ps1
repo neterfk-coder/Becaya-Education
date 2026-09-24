@@ -254,6 +254,83 @@ function Export-Svg {
 Write-Host "`nGoogle Play — icono de la ficha:"
 New-Icono -Lado 512 -Cuadrado -Ruta 'tool/play-icono-512.png'
 
+# Versión sin fondo, para documentos y presentaciones sobre cualquier color.
+New-Icono -Lado 1024 -SoloLetra -Ruta 'tool/becaya-marca-transparente-1024.png'
+
+# ---------- Gráfico destacado ----------
+
+# Play pide exactamente 1024x500 para la cabecera de la ficha. Recorta los
+# bordes según el dispositivo, así que todo lo legible va al centro.
+function New-GraficoDestacado {
+    param([string]$Ruta)
+
+    $ancho = 1024
+    $alto = 500
+
+    $bmp = New-Object System.Drawing.Bitmap($ancho, $alto, [System.Drawing.Imaging.PixelFormat]::Format24bppRgb)
+    $g = [System.Drawing.Graphics]::FromImage($bmp)
+    $g.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
+    $g.TextRenderingHint = [System.Drawing.Text.TextRenderingHint]::AntiAliasGridFit
+
+    $brocha = New-Object System.Drawing.Drawing2D.LinearGradientBrush(
+        (New-Object System.Drawing.PointF(0, 0)),
+        (New-Object System.Drawing.PointF($ancho, $alto)),
+        $moradoArriba, (New-Object System.Drawing.Color))
+    $brocha = New-Object System.Drawing.Drawing2D.LinearGradientBrush(
+        (New-Object System.Drawing.PointF(0, 0)),
+        (New-Object System.Drawing.PointF($ancho, $alto)),
+        $moradoArriba, ([System.Drawing.Color]::FromArgb(0x4C, 0x1D, 0x95)))
+    $g.FillRectangle($brocha, 0, 0, $ancho, $alto)
+    $brocha.Dispose()
+
+    # Baldosa con la marca, a la izquierda del texto.
+    $lado = 150
+    $x = 214
+    $y = ($alto - $lado) / 2
+
+    $r = $lado * $radioFrac
+    $d = $r * 2
+    $tile = New-Object System.Drawing.Drawing2D.GraphicsPath
+    $tile.AddArc($x, $y, $d, $d, 180, 90)
+    $tile.AddArc($x + $lado - $d, $y, $d, $d, 270, 90)
+    $tile.AddArc($x + $lado - $d, $y + $lado - $d, $d, $d, 0, 90)
+    $tile.AddArc($x, $y + $lado - $d, $d, $d, 90, 90)
+    $tile.CloseFigure()
+    $g.FillPath([System.Drawing.Brushes]::White, $tile)
+    $tile.Dispose()
+
+    # La "b" morada dentro de la baldosa.
+    $letraTrazo = Get-TrazoLetra -Lado $lado -FraccionVisible 1.0
+    $m = New-Object System.Drawing.Drawing2D.Matrix
+    $m.Translate($x, $y, [System.Drawing.Drawing2D.MatrixOrder]::Append)
+    $letraTrazo.Transform($m)
+    $m.Dispose()
+    $brochaLetra = New-Object System.Drawing.SolidBrush($moradoArriba)
+    $g.FillPath($brochaLetra, $letraTrazo)
+    $brochaLetra.Dispose()
+    $letraTrazo.Dispose()
+
+    # Nombre y frase, a la derecha.
+    $familia = New-Object System.Drawing.FontFamily($fuente)
+    $fNombre = New-Object System.Drawing.Font($familia, 62, [System.Drawing.FontStyle]::Regular, [System.Drawing.GraphicsUnit]::Pixel)
+    $fFrase = New-Object System.Drawing.Font('Arial', 25, [System.Drawing.FontStyle]::Regular, [System.Drawing.GraphicsUnit]::Pixel)
+
+    $tx = $x + $lado + 36
+    $g.DrawString('becaya', $fNombre, [System.Drawing.Brushes]::White, $tx, 196)
+    $brochaFrase = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(220, 255, 255, 255))
+    $g.DrawString('Convocatorias verificadas, por fecha', $fFrase, $brochaFrase, ($tx + 4), 272)
+
+    $brochaFrase.Dispose(); $fNombre.Dispose(); $fFrase.Dispose(); $familia.Dispose()
+
+    $destino = Join-Path $raiz $Ruta
+    $bmp.Save($destino, [System.Drawing.Imaging.ImageFormat]::Png)
+    $g.Dispose(); $bmp.Dispose()
+    Write-Host ("  {0,-62} {1}x{2}" -f $Ruta, $ancho, $alto)
+}
+
+Write-Host "`nGoogle Play — grafico destacado:"
+New-GraficoDestacado -Ruta 'tool/play-grafico-destacado-1024x500.png'
+
 Write-Host "`nMaestro vectorial:"
 Export-Svg -Ruta 'tool/becaya-marca.svg'
 

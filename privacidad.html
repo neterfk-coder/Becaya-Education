@@ -24,6 +24,9 @@
   }
   .legal .clave p:last-child{margin-bottom:0;}
   .legal .volver{display:inline-block;margin-bottom:28px;font-size:14px;color:var(--gris);}
+  .legal table{width:100%;border-collapse:collapse;margin:0 0 18px;font-size:15px;}
+  .legal th,.legal td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--borde);}
+  .legal th{color:var(--gris);font-size:13px;text-transform:uppercase;letter-spacing:.04em;}
 </style>
 </head>
 <body>
@@ -33,7 +36,7 @@
   <a class="volver" href="index.html">&larr; Volver a becaya</a>
 
   <h1>Política de privacidad</h1>
-  <p class="fecha">Última actualización: 24 de setiembre de 2026</p>
+  <p class="fecha">Última actualización: 25 de setiembre de 2026</p>
 
   <p>
     Esta política cubre el sitio <b>becaya.vercel.app</b> y la aplicación móvil
@@ -43,28 +46,77 @@
 
   <div class="clave">
     <p>
-      <b>En resumen: becaya no recoge datos personales.</b> No hay cuentas, ni registro,
-      ni publicidad, ni analítica, ni rastreadores. No sabemos quién eres y no queremos
-      saberlo: para mostrarte cuándo abre una beca no hace falta.
+      <b>Puedes usar becaya entera sin dar ningún dato.</b> Ver el catálogo, filtrarlo,
+      abrir convocatorias y guardarlas en tu teléfono funciona sin cuenta, sin registro
+      y sin conexión.
+    </p>
+    <p>
+      La cuenta es <b>opcional</b> y sirve para una sola cosa: que tus convocatorias
+      guardadas aparezcan también en otro dispositivo. Solo si decides crearla se
+      recogen los datos que se describen abajo.
     </p>
   </div>
 
-  <h2>Qué datos NO recogemos</h2>
+  <h2>Qué datos recogemos, y solo si creas una cuenta</h2>
+  <table>
+    <tr>
+      <th>Dato</th>
+      <th>Para qué</th>
+    </tr>
+    <tr>
+      <td>Dirección de correo electrónico</td>
+      <td>Identificar tu cuenta para poder iniciar sesión</td>
+    </tr>
+    <tr>
+      <td>Identificador de usuario</td>
+      <td>Asociar tus guardadas a tu cuenta</td>
+    </tr>
+    <tr>
+      <td>Lista de convocatorias guardadas</td>
+      <td>Sincronizarlas entre tus dispositivos</td>
+    </tr>
+  </table>
+  <p>
+    Si entras con Google, recibimos de Google tu correo y tu nombre de perfil. No
+    obtenemos tu contraseña de Google ni acceso a tu cuenta de Google: solo la
+    confirmación de que eres tú.
+  </p>
+  <p>
+    La autenticación y el almacenamiento de esa información los gestiona
+    <b>Google Firebase</b> (Firebase Authentication y Cloud Firestore) por cuenta
+    nuestra. Los datos no se venden, no se comparten con anunciantes ni con ningún
+    tercero, y no se usan para perfilar a nadie.
+  </p>
+
+  <h2>Qué NO recogemos, nunca</h2>
   <ul>
-    <li>Nombre, correo, teléfono o cualquier dato de identidad.</li>
     <li>Ubicación, contactos, fotos, archivos, cámara o micrófono.</li>
     <li>Identificadores de publicidad ni huella del dispositivo.</li>
-    <li>Estadísticas de uso, eventos o perfiles de comportamiento.</li>
+    <li>Analítica de uso, eventos ni perfiles de comportamiento.</li>
+    <li>Datos de pago: la app es gratuita y no tiene compras.</li>
   </ul>
   <p>
     La app solicita un único permiso de Android: <b>acceso a internet</b>, necesario
     para descargar el catálogo de convocatorias. Ningún otro.
   </p>
 
+  <h2>Cómo eliminar tu cuenta y tus datos</h2>
+  <p>
+    Desde la app: icono de cuenta &rarr; <b>Eliminar mi cuenta</b>. El borrado es
+    inmediato y permanente, sin solicitudes ni esperas. Los pasos completos y el detalle
+    de qué se borra están en
+    <a href="eliminar-cuenta.html">la página de eliminación de cuenta</a>.
+  </p>
+  <p>
+    Cerrar sesión o eliminar la cuenta no borra las convocatorias que guardaste en tu
+    propio teléfono: esas nunca salieron del dispositivo. Para borrarlas, desinstala la
+    app.
+  </p>
+
   <h2>Qué se guarda en tu dispositivo</h2>
   <p>
-    Algunas cosas se guardan <b>solo en tu teléfono o navegador</b>. No se envían a
-    ningún servidor, ni a nosotros ni a terceros, y nadie más puede leerlas:
+    Estas cosas se guardan <b>en tu teléfono o navegador</b>, y sin cuenta no salen de
+    ahí:
   </p>
   <ul>
     <li>
@@ -72,8 +124,9 @@
       funcione sin conexión.
     </li>
     <li>
-      <b>Las convocatorias que marcas como guardadas</b> en la web, almacenadas en el
-      almacenamiento local del navegador.
+      <b>Las convocatorias que marcas como guardadas.</b> Se escriben en el dispositivo
+      al instante, sin pedir cuenta ni conexión. Solo se copian a la nube si has
+      iniciado sesión, y solo para poder verlas en otro dispositivo.
     </li>
   </ul>
   <p>
@@ -82,9 +135,14 @@
 
   <h2>Conexiones que hace la app</h2>
   <p>
-    La app se conecta a un único sitio: <b>becaya.vercel.app</b>, para descargar los
-    archivos públicos del catálogo. No envía nada tuyo en esa petición — solo pide un
-    archivo, igual que al abrir una página web.
+    Sin cuenta, la app se conecta a un único sitio: <b>becaya.vercel.app</b>, para
+    descargar los archivos públicos del catálogo. No envía nada tuyo en esa petición
+    — solo pide un archivo, igual que al abrir una página web.
+  </p>
+  <p>
+    Si inicias sesión, se añaden conexiones a <b>Google Firebase</b> para autenticarte
+    y guardar la lista de convocatorias que marcaste. Nada más viaja en esas peticiones:
+    ni qué becas miraste, ni cuándo, ni desde dónde.
   </p>
   <p>
     El sitio está alojado en <b>Vercel</b>, que como cualquier servidor web registra

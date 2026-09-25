@@ -21,6 +21,11 @@ plugins {
     id("dev.flutter.flutter-plugin-loader") version "1.0.0"
     id("com.android.application") version "8.11.1" apply false
     id("org.jetbrains.kotlin.android") version "2.2.20" apply false
+    // Lee android/app/google-services.json y lo convierte en recursos
+    // de Android. firebase_core se inicializa desde firebase_options.dart
+    // y no lo necesitaría, pero google_sign_in sí: saca de aquí el
+    // cliente OAuth con el que habla con Google.
+    id("com.google.gms.google-services") version "4.4.2" apply false
 }
 
 include(":app")

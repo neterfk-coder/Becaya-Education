@@ -19,6 +19,11 @@ abstract final class Paleta {
 
   /* Neutros */
   static const negro = Color(0xFF0A0A0A);
+
+  /// Texto largo. Un negro puro cansa en párrafos de varias líneas;
+  /// este es el `--tinta` que la web usa para el cuerpo.
+  static const tinta = Color(0xFF141317);
+
   static const gris = Color(0xFF56535F);
   static const grisClaro = Color(0xFF8A8794);
   static const borde = Color(0xFFE8E3F5);

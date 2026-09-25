@@ -12,13 +12,16 @@
 
 /// Lo que ve el usuario. Debe coincidir con la parte anterior al "+"
 /// de `version:` en pubspec.yaml.
-const versionApp = '1.0.1';
+const versionApp = '1.0.2';
 
-/// Quién hace la app. Aparece en Ajustes y tiene que coincidir con el
-/// nombre de desarrollador de Google Play y con el certificado de
-/// firma: si no coinciden, al usuario le queda la duda de si la app
-/// que instaló es la que cree.
-const autorApp = 'NETRCD STUDIO';
+/// Quién hace la app. Aparece en Ajustes y debe coincidir con el nombre
+/// de desarrollador que se muestra en la ficha de Google Play.
+///
+/// Ojo: el identificador del paquete es `com.netrcd.becaya`, sin la "i".
+/// No es un descuido que se pueda arreglar — un applicationId no se
+/// puede cambiar después de subir la app a Play, así que se queda así
+/// para siempre. No afecta a nada visible: el usuario nunca lo ve.
+const autorApp = 'NETRICD STUDIO';
 
 /// Año de publicación, para el aviso de derechos.
 const anioApp = 2026;

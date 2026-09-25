@@ -11,7 +11,7 @@ publish_to: 'none'
 #
 # 1.0.1 sí cambia el número visible porque esta versión trae cosas
 # nuevas para el usuario: ajustes con sus datos y valoración en Play.
-version: 1.0.1+3
+version: 1.0.2+4
 
 environment:
   sdk: ^3.11.1
@@ -39,6 +39,11 @@ dependencies:
   firebase_auth: ^5.3.3
   cloud_firestore: ^5.5.0
   google_sign_in: ^6.2.2
+
+  # Actualización desde dentro de la app (Play In-App Updates). Solo
+  # funciona en builds instalados desde Google Play: en un APK puesto a
+  # mano o en un emulador, la comprobación falla y se ignora.
+  in_app_update: ^4.2.3
 
 dev_dependencies:
   flutter_test:

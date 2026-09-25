@@ -1,40 +1,61 @@
 /* ============================================================
-   firebase_options.dart — MARCADOR, todavía sin configurar
+   firebase_options.dart — claves del proyecto de Firebase
    ------------------------------------------------------------
-   Este archivo lo GENERA la herramienta flutterfire. Lo que hay
-   aquí es un marcador para que la app compile y funcione antes
-   de que exista el proyecto de Firebase.
+   Proyecto: becaya-c2931
 
-   Para reemplazarlo de verdad:
+   Normalmente lo genera `flutterfire configure`. Aquí está
+   escrito a partir de android/app/google-services.json, porque
+   la CLI de Firebase está autenticada con una cuenta que todavía
+   no tiene permiso sobre este proyecto. Los valores son los
+   mismos que habría generado la herramienta.
 
-     dart pub global activate flutterfire_cli
-     flutterfire configure
+   Si algún día vuelves a correr `flutterfire configure`, este
+   archivo se sobrescribe entero y no pasa nada: la forma de la
+   clase es la que espera el resto del código.
 
-   Eso lo sobrescribe entero con las claves del proyecto. No
-   edites los valores a mano.
+   ESTAS CLAVES NO SON SECRETAS. Van dentro del APK y cualquiera
+   puede extraerlas; Google las documenta como públicas. Lo que
+   protege los datos son las reglas de seguridad de Firestore
+   —que solo dejan a cada usuario tocar su propio documento— y
+   no el secreto de la clave. Por eso el archivo va a git.
 
-   MIENTRAS TANTO la app funciona igual: el catálogo se ve, las
-   convocatorias se guardan en el teléfono y lo único que falta
-   es la sincronización entre dispositivos, que se anuncia como
-   no disponible en vez de fallar.
-
-   Nota sobre estas claves cuando existan: NO son secretas. Las
-   claves de Firebase para cliente van dentro del APK y cualquiera
-   puede leerlas. Lo que protege los datos son las reglas de
-   seguridad de Firestore, no el secreto de la clave.
+   Solo está configurado Android. iOS necesitará su propia app
+   en el proyecto de Firebase antes de poder compilarse con
+   cuentas.
    ============================================================ */
 
-import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
+import 'package:flutter/foundation.dart'
+    show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
 class DefaultFirebaseOptions {
-  /// Lanza a propósito mientras no esté configurado.
-  ///
-  /// Sesion.iniciar() atrapa este error y deja la app en modo local:
-  /// nada se rompe, solo no hay cuenta. Cuando flutterfire genere este
-  /// archivo, devolverá las opciones reales y el modo cuenta se activa
-  /// solo, sin tocar ninguna otra línea del proyecto.
-  static FirebaseOptions get currentPlatform => throw UnsupportedError(
-        'Firebase no está configurado todavía. Corre `flutterfire configure` '
-        'en la carpeta app/. Ver docs/cuentas.md.',
+  static FirebaseOptions get currentPlatform {
+    if (kIsWeb) {
+      throw UnsupportedError(
+        'becaya no tiene app web en Firebase: la web usa el catálogo '
+        'público, sin cuentas.',
       );
+    }
+
+    return switch (defaultTargetPlatform) {
+      TargetPlatform.android => android,
+      TargetPlatform.iOS => throw UnsupportedError(
+          'Falta registrar la app de iOS en el proyecto de Firebase. '
+          'Corre `flutterfire configure` cuando exista.',
+        ),
+      _ => throw UnsupportedError(
+          'becaya solo tiene Firebase configurado para Android.',
+        ),
+    };
+  }
+
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: 'AIzaSyDlfWVmntEV6NFX9VlTelT-uTuhCHIUDXI',
+    appId: '1:1027111709320:android:fd89b17c6f5e3155facd3d',
+    messagingSenderId: '1027111709320',
+    projectId: 'becaya-c2931',
+    databaseURL: 'https://becaya-c2931-default-rtdb.firebaseio.com',
+    storageBucket: 'becaya-c2931.firebasestorage.app',
+  );
+
 }

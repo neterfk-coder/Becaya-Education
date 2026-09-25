@@ -15,6 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../datos/actualizacion.dart';
 import '../datos/guardadas.dart';
 import '../datos/repositorio.dart';
 import '../datos/sesion.dart';
@@ -22,6 +23,7 @@ import '../datos/sincronizacion.dart';
 import '../version.dart';
 import 'cuenta.dart';
 import 'paleta.dart';
+import 'privacidad.dart';
 import 'valorar.dart';
 
 class PantallaAjustes extends StatelessWidget {
@@ -30,11 +32,13 @@ class PantallaAjustes extends StatelessWidget {
     required this.sesion,
     required this.guardadas,
     required this.sincronizador,
+    required this.actualizacion,
   });
 
   final Sesion sesion;
   final Guardadas guardadas;
   final Sincronizador sincronizador;
+  final Actualizacion actualizacion;
 
   @override
   Widget build(BuildContext context) {
@@ -97,6 +101,12 @@ class PantallaAjustes extends StatelessWidget {
             valor: 'becaya.vercel.app',
             enlace: origenDatos,
           ),
+          ListenableBuilder(
+            listenable: actualizacion,
+            builder: (context, _) => _FilaActualizar(
+              actualizacion: actualizacion,
+            ),
+          ),
           const _Fila(
             icono: Icons.storefront_outlined,
             titulo: 'Ver en Google Play',
@@ -106,11 +116,16 @@ class PantallaAjustes extends StatelessWidget {
 
           const SizedBox(height: 26),
           const _Titulo('Privacidad'),
-          const _Fila(
+          // Se abre dentro de la app, no en el navegador: la política
+          // tiene que poder leerse sin conexión y sin depender de que
+          // el sitio esté en pie.
+          _Fila(
             icono: Icons.shield_outlined,
             titulo: 'Política de privacidad',
             valor: 'Qué datos se manejan y por qué',
-            enlace: '$origenDatos/privacidad.html',
+            onTocar: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const PantallaPrivacidad()),
+            ),
           ),
           const _Fila(
             icono: Icons.delete_outline,
@@ -449,6 +464,54 @@ class _Creditos extends StatelessWidget {
 }
 
 /* ------------------------------------------------------------
+   Buscar actualizaciones a mano.
+
+   La app ya comprueba sola al arrancar, pero esta fila existe
+   porque el usuario que sospecha que su versión está vieja quiere
+   poder comprobarlo él, no esperar a que le avisen.
+   ------------------------------------------------------------ */
+
+class _FilaActualizar extends StatelessWidget {
+  const _FilaActualizar({required this.actualizacion});
+
+  final Actualizacion actualizacion;
+
+  @override
+  Widget build(BuildContext context) {
+    final (valor, accion) = switch (actualizacion.estado) {
+      EstadoActualizacion.disponible => (
+          'Hay una versión nueva disponible',
+          actualizacion.descargar,
+        ),
+      EstadoActualizacion.descargando => ('Descargando…', null),
+      EstadoActualizacion.listaParaInstalar => (
+          'Lista. Toca para reiniciar e instalar',
+          actualizacion.instalar,
+        ),
+      EstadoActualizacion.alDia => (
+          'Estás en la última versión',
+          () => actualizacion.comprobar(silencioso: false),
+        ),
+      EstadoActualizacion.fallo => (
+          'No se pudo comprobar. Toca para reintentar',
+          () => actualizacion.comprobar(silencioso: false),
+        ),
+      EstadoActualizacion.desconocido => (
+          'Buscar actualizaciones',
+          () => actualizacion.comprobar(silencioso: false),
+        ),
+    };
+
+    return _Fila(
+      icono: Icons.system_update,
+      titulo: 'Actualizaciones',
+      valor: actualizacion.comprobando ? 'Comprobando…' : valor,
+      onTocar: actualizacion.comprobando ? null : accion,
+    );
+  }
+}
+
+/* ------------------------------------------------------------
    Piezas de la lista.
    ------------------------------------------------------------ */
 
@@ -503,25 +566,31 @@ class _Fila extends StatelessWidget {
     required this.titulo,
     required this.valor,
     this.enlace,
+    this.onTocar,
   });
 
   final IconData icono;
   final String titulo;
   final String valor;
 
-  /// Si hay enlace, la fila se puede tocar y abre el navegador del
-  /// sistema. Igual que con las convocatorias: nada importante se
-  /// muestra dentro de la app sin que se vea la dirección real.
+  /// Si hay enlace, la fila abre el navegador del sistema. Igual que con
+  /// las convocatorias: nada que salga de la app se muestra sin que se
+  /// vea la dirección real.
   final String? enlace;
+
+  /// Alternativa a [enlace] para lo que se queda dentro de la app.
+  final VoidCallback? onTocar;
 
   @override
   Widget build(BuildContext context) {
     final destino = enlace;
+    final accion = onTocar ??
+        (destino == null ? null : () => _abrir(context, destino));
 
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: destino == null ? null : () => _abrir(context, destino),
+        onTap: accion,
         borderRadius: BorderRadius.circular(10),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
@@ -550,7 +619,9 @@ class _Fila extends StatelessWidget {
                 ),
               ),
               if (destino != null)
-                const Icon(Icons.open_in_new, size: 15, color: Paleta.grisClaro),
+                const Icon(Icons.open_in_new, size: 15, color: Paleta.grisClaro)
+              else if (accion != null)
+                const Icon(Icons.chevron_right, size: 20, color: Paleta.grisClaro),
             ],
           ),
         ),

@@ -11,6 +11,7 @@
 
 import 'package:flutter/material.dart';
 
+import 'datos/actualizacion.dart';
 import 'datos/guardadas.dart';
 import 'datos/repositorio.dart';
 import 'datos/sesion.dart';
@@ -18,6 +19,7 @@ import 'datos/sincronizacion.dart';
 import 'modelo/convocatoria.dart';
 import 'motor/estado.dart';
 import 'ui/ajustes.dart';
+import 'ui/aviso_actualizacion.dart';
 import 'ui/cuenta.dart';
 import 'ui/detalle.dart';
 import 'ui/intro.dart';
@@ -64,6 +66,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
   final _repositorio = Repositorio();
   final _guardadas = Guardadas();
   final _sesion = Sesion();
+  final _actualizacion = Actualizacion();
   late final _sincronizador = Sincronizador(
     guardadas: _guardadas,
     sesion: _sesion,
@@ -88,11 +91,14 @@ class _PantallaInicioState extends State<PantallaInicio> {
     // Arrancar Firebase puede fallar —y falla mientras no esté
     // configurado— sin que eso afecte a nada de lo anterior.
     _sesion.iniciar();
+    // Fuera de Google Play esto falla siempre; por eso va en silencio.
+    _actualizacion.comprobar();
   }
 
   @override
   void dispose() {
     _sincronizador.dispose();
+    _actualizacion.dispose();
     _sesion.dispose();
     _guardadas.dispose();
     super.dispose();
@@ -193,6 +199,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                     sesion: _sesion,
                     guardadas: _guardadas,
                     sincronizador: _sincronizador,
+                    actualizacion: _actualizacion,
                   ),
                 ),
               ),
@@ -278,6 +285,9 @@ class _PantallaInicioState extends State<PantallaInicio> {
   /// saber antes de confiar en una fecha.
   Widget? _avisos(Catalogo catalogo) {
     final bandas = <Widget>[
+      // Va primero: si hay versión nueva, es lo más accionable de todo
+      // lo que puede aparecer aquí. Se pinta sola cuando no hay nada.
+      AvisoActualizacion(actualizacion: _actualizacion),
       if (catalogo.ejemplo)
         const _Banda(
           icono: Icons.science_outlined,
@@ -295,7 +305,8 @@ class _PantallaInicioState extends State<PantallaInicio> {
         ),
     ];
 
-    if (bandas.isEmpty) return null;
+    // Siempre hay al menos el aviso de actualización, que se encoge a
+    // cero cuando no hay novedad.
     return Column(children: bandas);
   }
 }

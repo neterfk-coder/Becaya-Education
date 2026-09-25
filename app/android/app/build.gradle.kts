@@ -5,6 +5,9 @@ plugins {
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+    // Procesa google-services.json. Va después del plugin de Android
+    // porque necesita la configuración de variantes ya establecida.
+    id("com.google.gms.google-services")
 }
 
 // Datos de la clave de firma. Viven en android/key.properties, que está

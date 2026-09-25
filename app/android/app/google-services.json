@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1027111709320",
+    "firebase_url": "https://becaya-c2931-default-rtdb.firebaseio.com",
+    "project_id": "becaya-c2931",
+    "storage_bucket": "becaya-c2931.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1027111709320:android:fd89b17c6f5e3155facd3d",
+        "android_client_info": {
+          "package_name": "com.netrcd.becaya"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1027111709320-hon1erukfii3d6fss6i5pqqt4cpbip9t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.netrcd.becaya",
+            "certificate_hash": "12e9f3d4058f0eaa96f46f6d2c65124b357169a5"
+          }
+        },
+        {
+          "client_id": "1027111709320-qikli0r8lrrlut0hn8aqntcu9t3a5o89.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlfWVmntEV6NFX9VlTelT-uTuhCHIUDXI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1027111709320-qikli0r8lrrlut0hn8aqntcu9t3a5o89.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

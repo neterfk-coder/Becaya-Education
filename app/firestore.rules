@@ -1,0 +1,64 @@
+rules_version = '2';
+
+// ============================================================
+// Reglas de seguridad de Firestore — becaya
+// ------------------------------------------------------------
+// Se despliegan con:  firebase deploy --only firestore:rules
+//
+// La base está en modo bloqueado: lo que no se permite aquí
+// explícitamente, queda denegado. Eso incluye cualquier
+// colección que alguien invente desde un cliente modificado.
+//
+// Estas reglas son la ÚNICA protección real de los datos. La
+// clave de API que viaja en el APK es pública por diseño y
+// cualquiera puede extraerla; lo que impide que un extraño lea
+// las guardadas de otro es lo que está escrito aquí, no el
+// secreto de esa clave.
+// ============================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Un documento por usuario, con sus convocatorias guardadas.
+    match /usuarios/{uid} {
+
+      // Solo el dueño, y solo estando autenticado. Sin esto,
+      // cualquiera podría leer las guardadas de cualquier otro
+      // conociendo su uid.
+      allow read: if esElDueno(uid);
+
+      // Al escribir se valida la FORMA del documento, no solo
+      // quién escribe. Sin esta parte, un cliente modificado
+      // podría usar la base como almacenamiento gratuito
+      // subiendo cualquier cosa bajo su propio uid.
+      allow write: if esElDueno(uid) && documentoValido();
+
+      // Borrar la cuenta borra su documento. Lo hace la propia
+      // app antes de eliminar el usuario de Auth: después ya no
+      // habría sesión con la que autorizar esta operación.
+      allow delete: if esElDueno(uid);
+    }
+  }
+}
+
+function esElDueno(uid) {
+  return request.auth != null && request.auth.uid == uid;
+}
+
+function documentoValido() {
+  let datos = request.resource.data;
+
+  // Nada de campos inventados: solo los tres que escribe la app.
+  return datos.keys().hasOnly(['becas', 'voluntariados', 'actualizado'])
+    && listaDeIdsValida(datos, 'becas')
+    && listaDeIdsValida(datos, 'voluntariados');
+}
+
+// Cada colección es una lista de ids de texto. El tope de 500 no
+// es una limitación pensada para el usuario —nadie guarda 500
+// becas— sino un techo para que nadie convierta su documento en
+// un almacén de datos arbitrarios.
+function listaDeIdsValida(datos, campo) {
+  return !datos.keys().hasAny([campo])
+    || (datos[campo] is list && datos[campo].size() <= 500);
+}

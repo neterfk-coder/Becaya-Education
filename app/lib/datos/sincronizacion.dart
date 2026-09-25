@@ -110,11 +110,17 @@ class Sincronizador extends ChangeNotifier {
   Future<void> _subir(String uid, {bool avisar = true}) async {
     if (avisar) _fijar(EstadoSync.sincronizando);
     try {
-      await _documento(uid).set({
-        for (final coleccion in Coleccion.values)
-          coleccion.name: guardadas.de(coleccion).toList()..sort(),
-        'actualizado': FieldValue.serverTimestamp(),
-      });
+      await _documento(uid).set(
+        {
+          for (final coleccion in Coleccion.values)
+            coleccion.name: guardadas.de(coleccion).toList()..sort(),
+          'actualizado': FieldValue.serverTimestamp(),
+        },
+        // merge OBLIGATORIO: el documento del usuario también guarda su
+        // nombre y su foto. Sin esto, cada vez que alguien marcara una
+        // beca se llevaría por delante su perfil entero.
+        SetOptions(merge: true),
+      );
       _ultimaVez = DateTime.now();
       if (avisar) _fijar(EstadoSync.alDia);
     } catch (error) {

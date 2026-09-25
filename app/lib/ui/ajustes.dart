@@ -17,6 +17,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../datos/actualizacion.dart';
 import '../datos/guardadas.dart';
+import '../datos/perfil.dart';
 import '../datos/repositorio.dart';
 import '../datos/sesion.dart';
 import '../datos/sincronizacion.dart';
@@ -33,12 +34,14 @@ class PantallaAjustes extends StatelessWidget {
     required this.guardadas,
     required this.sincronizador,
     required this.actualizacion,
+    required this.perfil,
   });
 
   final Sesion sesion;
   final Guardadas guardadas;
   final Sincronizador sincronizador;
   final Actualizacion actualizacion;
+  final Perfil perfil;
 
   @override
   Widget build(BuildContext context) {
@@ -59,15 +62,17 @@ class PantallaAjustes extends StatelessWidget {
         children: [
           const _Titulo('Tu cuenta'),
           ListenableBuilder(
-            listenable: sesion,
+            listenable: Listenable.merge([sesion, perfil]),
             builder: (context, _) => _BloqueCuenta(
               sesion: sesion,
+              perfil: perfil,
               onAbrir: () => Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (_) => PantallaCuenta(
                     sesion: sesion,
                     guardadas: guardadas,
                     sincronizador: sincronizador,
+                    perfil: perfil,
                   ),
                 ),
               ),
@@ -167,9 +172,14 @@ class PantallaAjustes extends StatelessWidget {
    ------------------------------------------------------------ */
 
 class _BloqueCuenta extends StatelessWidget {
-  const _BloqueCuenta({required this.sesion, required this.onAbrir});
+  const _BloqueCuenta({
+    required this.sesion,
+    required this.perfil,
+    required this.onAbrir,
+  });
 
   final Sesion sesion;
+  final Perfil perfil;
   final VoidCallback onAbrir;
 
   @override
@@ -226,6 +236,12 @@ class _BloqueCuenta extends StatelessWidget {
     }
 
     final correo = sesion.usuario?.email;
+    final foto = perfil.foto;
+    // El nombre del perfil manda sobre el de Google: si alguien lo
+    // cambió aquí, es porque prefiere ese.
+    final nombre = (perfil.nombre?.trim().isNotEmpty ?? false)
+        ? perfil.nombre!.trim()
+        : sesion.nombreVisible;
 
     return Material(
       color: Colors.transparent,
@@ -243,14 +259,19 @@ class _BloqueCuenta extends StatelessWidget {
               CircleAvatar(
                 radius: 24,
                 backgroundColor: Paleta.morado100,
-                child: Text(
-                  sesion.nombreVisible.characters.first.toUpperCase(),
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w800,
-                    color: Paleta.morado700,
-                  ),
-                ),
+                backgroundImage: foto == null ? null : MemoryImage(foto),
+                child: foto != null
+                    ? null
+                    : Text(
+                        nombre.isEmpty
+                            ? '?'
+                            : nombre.characters.first.toUpperCase(),
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800,
+                          color: Paleta.morado700,
+                        ),
+                      ),
               ),
               const SizedBox(width: 14),
               Expanded(
@@ -258,7 +279,7 @@ class _BloqueCuenta extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      sesion.nombreVisible,
+                      nombre,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(

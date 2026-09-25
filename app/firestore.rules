@@ -48,10 +48,27 @@ function esElDueno(uid) {
 function documentoValido() {
   let datos = request.resource.data;
 
-  // Nada de campos inventados: solo los tres que escribe la app.
-  return datos.keys().hasOnly(['becas', 'voluntariados', 'actualizado'])
+  // Nada de campos inventados: solo los que escribe la app.
+  return datos.keys().hasOnly(
+      ['becas', 'voluntariados', 'actualizado', 'nombre', 'foto'])
     && listaDeIdsValida(datos, 'becas')
-    && listaDeIdsValida(datos, 'voluntariados');
+    && listaDeIdsValida(datos, 'voluntariados')
+    && nombreValido(datos)
+    && fotoValida(datos);
+}
+
+function nombreValido(datos) {
+  return !datos.keys().hasAny(['nombre'])
+    || (datos.nombre is string && datos.nombre.size() <= 40);
+}
+
+// La foto va como texto en base64 dentro del documento, no en Storage.
+// El tope de 250 KB es lo que impide que alguien use su documento como
+// disco duro: la app comprime a 256 px, que ronda los 30 KB, así que
+// este límite solo lo tocaría un cliente modificado.
+function fotoValida(datos) {
+  return !datos.keys().hasAny(['foto'])
+    || (datos.foto is string && datos.foto.size() <= 250000);
 }
 
 // Cada colección es una lista de ids de texto. El tope de 500 no

@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'datos/actualizacion.dart';
 import 'datos/bienvenida.dart';
 import 'datos/guardadas.dart';
+import 'datos/perfil.dart';
 import 'datos/repositorio.dart';
 import 'datos/sesion.dart';
 import 'datos/sincronizacion.dart';
@@ -70,6 +71,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
   final _sesion = Sesion();
   final _actualizacion = Actualizacion();
   final _bienvenida = Bienvenida();
+  final _perfil = Perfil();
   late final _sincronizador = Sincronizador(
     guardadas: _guardadas,
     sesion: _sesion,
@@ -102,8 +104,24 @@ class _PantallaInicioState extends State<PantallaInicio> {
     _sesion.addListener(_alCambiarSesion);
   }
 
+  /// El uid de la última sesión vista, para distinguir un cambio real
+  /// de persona de una simple notificación repetida.
+  String? _uidAnterior;
+
   void _alCambiarSesion() {
     if (_sesion.dentro) _bienvenida.marcarVista();
+
+    final uid = _sesion.uid;
+    if (uid == _uidAnterior) return;
+    _uidAnterior = uid;
+
+    if (uid == null) {
+      // Al cerrar sesión se vacía: el perfil de una persona no puede
+      // quedarse en pantalla cuando entra otra en el mismo teléfono.
+      _perfil.limpiar();
+    } else {
+      _perfil.cargar(uid);
+    }
   }
 
   @override
@@ -112,6 +130,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
     _sincronizador.dispose();
     _actualizacion.dispose();
     _bienvenida.dispose();
+    _perfil.dispose();
     _sesion.dispose();
     _guardadas.dispose();
     super.dispose();
@@ -124,6 +143,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
           sesion: _sesion,
           guardadas: _guardadas,
           sincronizador: _sincronizador,
+          perfil: _perfil,
         ),
       ),
     );
@@ -236,6 +256,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                     guardadas: _guardadas,
                     sincronizador: _sincronizador,
                     actualizacion: _actualizacion,
+                    perfil: _perfil,
                   ),
                 ),
               ),

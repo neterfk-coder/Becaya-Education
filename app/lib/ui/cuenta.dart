@@ -13,9 +13,11 @@
 import 'package:flutter/material.dart';
 
 import '../datos/guardadas.dart';
+import '../datos/perfil.dart';
 import '../datos/sesion.dart';
 import '../datos/sincronizacion.dart';
 import 'paleta.dart';
+import 'perfil.dart';
 
 class PantallaCuenta extends StatelessWidget {
   const PantallaCuenta({
@@ -23,11 +25,13 @@ class PantallaCuenta extends StatelessWidget {
     required this.sesion,
     required this.guardadas,
     required this.sincronizador,
+    required this.perfil,
   });
 
   final Sesion sesion;
   final Guardadas guardadas;
   final Sincronizador sincronizador;
+  final Perfil perfil;
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +59,7 @@ class PantallaCuenta extends StatelessWidget {
               sesion: sesion,
               guardadas: guardadas,
               sincronizador: sincronizador,
+              perfil: perfil,
             ),
         },
       ),
@@ -112,11 +117,13 @@ class _Dentro extends StatelessWidget {
     required this.sesion,
     required this.guardadas,
     required this.sincronizador,
+    required this.perfil,
   });
 
   final Sesion sesion;
   final Guardadas guardadas;
   final Sincronizador sincronizador;
+  final Perfil perfil;
 
   @override
   Widget build(BuildContext context) {
@@ -166,7 +173,26 @@ class _Dentro extends StatelessWidget {
                 guardadas.cuantas(Coleccion.voluntariados),
           ),
         ),
-        const SizedBox(height: 26),
+        const SizedBox(height: 22),
+        FilledButton.icon(
+          onPressed: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => PantallaPerfil(sesion: sesion, perfil: perfil),
+            ),
+          ),
+          icon: const Icon(Icons.manage_accounts_outlined, size: 19),
+          label: const Text('Editar mi perfil'),
+          style: FilledButton.styleFrom(
+            backgroundColor: Paleta.morado500,
+            foregroundColor: Paleta.blanco,
+            minimumSize: const Size.fromHeight(48),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        ),
+
+        const SizedBox(height: 10),
         OutlinedButton.icon(
           onPressed: () async {
             final salir = await _confirmarSalida(context);

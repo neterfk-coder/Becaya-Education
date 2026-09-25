@@ -145,6 +145,34 @@ class Sesion extends ChangeNotifier {
     await FirebaseAuth.instance.signOut();
   }
 
+  /// Cambia la contraseña de una cuenta de correo.
+  ///
+  /// No aplica a quien entró con Google: esa cuenta no tiene contraseña
+  /// aquí, la gestiona Google. La pantalla no ofrece la opción en ese
+  /// caso, y esto lo comprueba igualmente por si acaso.
+  ///
+  /// Se pide la actual aunque Firebase no siempre la exija: si alguien
+  /// deja el teléfono desbloqueado, no debería bastar con abrir la app
+  /// para quedarse con la cuenta.
+  Future<bool> cambiarClave({
+    required String actual,
+    required String nueva,
+  }) =>
+      _intentar(() async {
+        final usuario = FirebaseAuth.instance.currentUser;
+        final correo = usuario?.email;
+
+        if (usuario == null || correo == null || entroConGoogle) {
+          throw FirebaseAuthException(code: 'sin-clave-propia');
+        }
+
+        await usuario.reauthenticateWithCredential(
+          EmailAuthProvider.credential(email: correo, password: actual),
+        );
+        await usuario.updatePassword(nueva);
+        return true;
+      });
+
   /// Con qué método entró el usuario. La pantalla lo necesita para
   /// saber si tiene que pedir la contraseña antes de borrar la cuenta.
   String? get metodoDeAcceso {
@@ -271,6 +299,9 @@ class Sesion extends ChangeNotifier {
         'Por seguridad, vuelve a iniciar sesión antes de borrar la cuenta.',
       'falta-contrasena' =>
         'Escribe tu contraseña para confirmar el borrado.',
+      'sin-clave-propia' =>
+        'Tu cuenta entra con Google, así que la contraseña se cambia '
+            'desde tu cuenta de Google.',
       _ => 'No se pudo completar (${e.code}).',
     };
   }

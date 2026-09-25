@@ -12,7 +12,7 @@
 
 /// Lo que ve el usuario. Debe coincidir con la parte anterior al "+"
 /// de `version:` en pubspec.yaml.
-const versionApp = '1.0.2';
+const versionApp = '1.1.0';
 
 /// Quién hace la app. Aparece en Ajustes y debe coincidir con el nombre
 /// de desarrollador que se muestra en la ficha de Google Play.

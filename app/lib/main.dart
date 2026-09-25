@@ -12,6 +12,7 @@
 import 'package:flutter/material.dart';
 
 import 'datos/actualizacion.dart';
+import 'datos/bienvenida.dart';
 import 'datos/guardadas.dart';
 import 'datos/repositorio.dart';
 import 'datos/sesion.dart';
@@ -20,6 +21,7 @@ import 'modelo/convocatoria.dart';
 import 'motor/estado.dart';
 import 'ui/ajustes.dart';
 import 'ui/aviso_actualizacion.dart';
+import 'ui/bienvenida.dart';
 import 'ui/cuenta.dart';
 import 'ui/detalle.dart';
 import 'ui/intro.dart';
@@ -67,6 +69,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
   final _guardadas = Guardadas();
   final _sesion = Sesion();
   final _actualizacion = Actualizacion();
+  final _bienvenida = Bienvenida();
   late final _sincronizador = Sincronizador(
     guardadas: _guardadas,
     sesion: _sesion,
@@ -93,12 +96,22 @@ class _PantallaInicioState extends State<PantallaInicio> {
     _sesion.iniciar();
     // Fuera de Google Play esto falla siempre; por eso va en silencio.
     _actualizacion.comprobar();
+    _bienvenida.cargar();
+    // Quien inicia sesión ya eligió cómo entrar: no tiene sentido
+    // volver a preguntárselo en el siguiente arranque.
+    _sesion.addListener(_alCambiarSesion);
+  }
+
+  void _alCambiarSesion() {
+    if (_sesion.dentro) _bienvenida.marcarVista();
   }
 
   @override
   void dispose() {
+    _sesion.removeListener(_alCambiarSesion);
     _sincronizador.dispose();
     _actualizacion.dispose();
+    _bienvenida.dispose();
     _sesion.dispose();
     _guardadas.dispose();
     super.dispose();
@@ -157,6 +170,29 @@ class _PantallaInicioState extends State<PantallaInicio> {
 
   @override
   Widget build(BuildContext context) {
+    return ListenableBuilder(
+      listenable: _bienvenida,
+      builder: (context, _) {
+        // Mientras se lee el disco no se pinta nada: enseñar la
+        // bienvenida medio segundo a quien ya la pasó se ve como un
+        // parpadeo. La intro de marca sigue encima, así que el usuario
+        // no ve un hueco.
+        if (!_bienvenida.listo) return const Scaffold();
+
+        if (!_bienvenida.vista) {
+          return PantallaBienvenida(
+            sesion: _sesion,
+            onInvitado: _bienvenida.marcarVista,
+            onAbrirCorreo: _abrirCuenta,
+          );
+        }
+
+        return _catalogoCompleto(context);
+      },
+    );
+  }
+
+  Widget _catalogoCompleto(BuildContext context) {
     final catalogo = _catalogo;
 
     return DefaultTabController(
